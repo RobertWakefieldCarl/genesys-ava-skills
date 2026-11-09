@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "notes": "Optional AVA role profiles reduce false-positive law themes when scorecard text comes from security corner cases or customer docs (brokerage claim, Salesforce record, etc.).",
+  "profiles": {
+    "godaddy-dbs": {
+      "label": "GoDaddy Domain Broker Service (UC1–UC3)",
+      "description": "Broker routing, broker unavailable, and migration-status assistants for confidential domain acquisitions — not lending, hiring, or health insurance UR.",
+      "default_sector": "commercial",
+      "default_evaluation_suite": "corner-security",
+      "session_hints": ["AXL-godaddy", "godaddy", "domain broker", "broker routing", "migration status"],
+      "customer_docs_out_of_scope": [
+        "company-research.md",
+        "pov-deck.html",
+        "pov-deck.pdf",
+        "customer-takehome.html",
+        "customer-takehome.json",
+        "call-flow-analysis.md",
+        "dbs-flow-analysis.md",
+        "build-log.md",
+        "mock-data-reference.html",
+        "readout-artifact.html",
+        "run-artifact.html"
+      ],
+      "spec_sections_in_scope": "1-5",
+      "deferred_control_ids": [
+        "financial-fair-lending",
+        "employment-screening",
+        "insurance-naic",
+        "phi-health-hipaa",
+        "telecom-tcpa-messaging"
+      ],
+      "deferred_rationale": {
+        "financial-fair-lending": "No credit decisions or adverse lending actions; 'account' and brokerage context are not ECOA/FCRA.",
+        "employment-screening": "Not a hiring or candidate-screening agent.",
+        "insurance-naic": "Brokerage 'claim' IDs are domain-broker claims, not health-insurance claims.",
+        "phi-health-hipaa": "Not a clinical or payer PHI workflow.",
+        "telecom-tcpa-messaging": "Inbound routing lab; not outbound telemarketing unless that product is in spec §1."
+      },
+      "priority_control_ids": [
+        "transparency-disclosure",
+        "accuracy-no-fabrication",
+        "security-llm-owasp",
+        "data-protection-gdpr",
+        "recording-consent-privacy",
+        "payments-pci-scope",
+        "accessibility"
+      ]
+    }
+  }
+}

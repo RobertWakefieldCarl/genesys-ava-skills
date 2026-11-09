@@ -313,6 +313,16 @@ For an authentication error (expired or rejected credentials, 401/403 responses,
 
 See [docs/troubleshooting.md](./docs/troubleshooting.md) for the `config.toml` locations by setup and fixes for missing permissions, 403s after first start, environment credentials being ignored, and missing tools.
 
+## Extension skills (this fork)
+
+Skills in this repository that are **not** shipped in the official `ava-mcp` wheel can be installed manually from their subfolders.
+
+| Skill | Folder | Install |
+| ----- | ------ | ------- |
+| **ava-compliance-checker** | [`ava-compliance-checker/`](./ava-compliance-checker/) | Run `install.ps1` or `install.sh` inside that folder, or copy to `~/.cursor/skills/ava-compliance-checker`. Maps `ava-evaluate` scorecards to the bundled laws/compendium report (v1.4.3). |
+
+See each skill's `SKILL.md` and `README.md` for usage.
+
 ## License
 
 This code is provided under the MIT license with no maintenance or support. See [LICENSE](./LICENSE).

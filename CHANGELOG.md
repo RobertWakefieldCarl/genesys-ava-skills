@@ -1,5 +1,9 @@
 # Changelog
 
+## Extension — ava-compliance-checker
+
+Added [`ava-compliance-checker/`](./ava-compliance-checker/) — Cursor skill for compliance HTML/PDF reports from `ava-evaluate` scorecards (sector profiles, AXL `axl-sessions` artifacts, GoDaddy DBS scope). Install from that folder; not part of the `ava_mcp` wheel.
+
 ## 1.7.0
 Support for Answer Generation
 Minor: include intent information in list categories tool

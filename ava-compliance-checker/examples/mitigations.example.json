@@ -1,0 +1,14 @@
+{
+  "global_notes": [
+    "Published AVA v2.1 after guardrail and disclosure updates.",
+    "Attested with internal reviewer sign-off on instruction changes."
+  ],
+  "items": [
+    {
+      "test_case_id": "example-scenario-id",
+      "title": "Disclosure at session start",
+      "description": "Added opening script clarifying the caller is speaking with AI; linked human hand-off path per playbook.",
+      "areas": ["instructions", "guardrails"]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "ava-compliance-checker",
+  "version": "1.4.3",
+  "bundledReferenceDocument": {
+    "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
+    "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
+    "sha256": "0d44508ec9dffcca2718b09d8b9f6a9773bc6aa1455488f297c71cc313328756",
+    "note": "Sole legal/compliance corpus; v1.4 November 2026 (penalty tables, §1.10 worldwide AI, §3.9–3.10)."
+  },
+  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector profiles; compliance artifacts under axl-sessions/AXL-*/compliance/.",
+  "author": "Stern (custom)",
+  "license": "Internal redistribution; not an official Genesys release.",
+  "requires": {
+    "skills": ["ava-evaluate"],
+    "tools": [],
+    "optional": [
+      "node >= 18 for generate-compliance-report.js",
+      "puppeteer (npm) for PDF output without browser print"
+    ]
+  },
+  "install": {
+    "target": "<ide-base>/skills/ava-compliance-checker",
+    "scripts": {
+      "windows": "install.ps1",
+      "unix": "install.sh"
+    }
+  },
+  "files": [
+    "SKILL.md",
+    "README.md",
+    "MANIFEST.json",
+    "install.ps1",
+    "install.sh",
+    "examples/mitigations.example.json",
+    "data/evidence-map.json",
+    "data/ava-role-profiles.json",
+    "references/customer-documentation-scope.md",
+    "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
+    "scripts/generate-compliance-report.js",
+    "scripts/package.ps1"
+  ]
+}

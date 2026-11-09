@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+*.pem
+credentials*.json
+.DS_Store
+Thumbs.db
+# Accidental local test artifacts (not part of the skill package)
+/scorecard.json
+/compliance-report.html
+/compliance-run.json
