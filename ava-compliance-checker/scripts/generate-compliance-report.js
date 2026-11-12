@@ -11,7 +11,8 @@
  *   --mitigations <path>          JSON describing fixes applied (optional)
  *   --output-html <filename>      Default: compliance-report.html, verification, or mitigation-outcome name
  *   --sector commercial|government|healthcare   (or --commercial | --government | --healthcare flags)
- *   --ava-design <path>           Infer sector from design/sage JSON when sector not set
+ *   --market-vertical <id>        Sets sector and optional --ava-role (see data/ava-market-verticals.json)
+ *   --ava-design <path>           Infer sector / market vertical from design/sage JSON when flags omitted
  *   --mitigation-report           After retest: compliance-mitigation-outcome-report.html
  *
  * Legacy: --deployment commercial|us-government maps to --sector.
@@ -41,6 +42,8 @@ function parseArgs() {
     themesFrom: 'all',
     sector: null,
     sectorExplicit: false,
+    marketVertical: null,
+    marketVerticalExplicit: false,
     avaDesign: null,
     mitigationReport: false,
     evaluationSuite: null,
@@ -79,6 +82,9 @@ function parseArgs() {
       const d = argv[++i].toLowerCase();
       out.sector = d === 'us-government' ? 'government' : d;
       out.sectorExplicit = true;
+    } else if (argv[i] === '--market-vertical' && argv[i + 1]) {
+      out.marketVertical = String(argv[++i]).toLowerCase().trim();
+      out.marketVerticalExplicit = true;
     } else if (argv[i] === '--ava-design' && argv[i + 1]) out.avaDesign = path.resolve(argv[++i]);
     else if (argv[i] === '--mitigation-report') out.mitigationReport = true;
     else if (argv[i] === '--evaluation-suite' && argv[i + 1]) out.evaluationSuite = argv[++i].toLowerCase();
@@ -259,7 +265,7 @@ function inferSectorFromText(text) {
   return { sector: 'commercial', govScore: gov, healthScore: health, confidence: gov || health ? 'low' : 'default' };
 }
 
-function inferSectorFromArtifacts({ avaDesignPath, specPath, scorecardPath }) {
+function loadInferenceContext({ avaDesignPath, specPath, scorecardPath }) {
   const chunks = [];
   const pushFile = (p) => {
     if (p && fs.existsSync(p)) {
@@ -278,7 +284,85 @@ function inferSectorFromArtifacts({ avaDesignPath, specPath, scorecardPath }) {
     pushFile(path.join(lifecycle, 'design-artifact.json'));
     pushFile(path.join(lifecycle, 'spec-artifact.md'));
   }
-  return inferSectorFromText(chunks.join('\n'));
+  return chunks.join('\n');
+}
+
+function inferSectorFromArtifacts({ avaDesignPath, specPath, scorecardPath }) {
+  return inferSectorFromText(loadInferenceContext({ avaDesignPath, specPath, scorecardPath }));
+}
+
+function loadMarketVerticals(customPath) {
+  const p = customPath || path.join(path.resolve(__dirname, '..'), 'data', 'ava-market-verticals.json');
+  if (!fs.existsSync(p)) return null;
+  try {
+    return loadJson(p);
+  } catch {
+    return null;
+  }
+}
+
+function scoreVerticalFromText(verticalDef, text) {
+  const t = ` ${String(text || '').toLowerCase()} `;
+  let score = 0;
+  for (const k of verticalDef.inference_keywords || []) {
+    if (t.includes(String(k).toLowerCase())) score++;
+  }
+  return score;
+}
+
+function inferMarketVerticalFromText(text, doc) {
+  const defaultId = doc?.default_vertical || 'general-commercial';
+  if (!doc?.verticals) {
+    return { id: defaultId, confidence: 'default', scores: {}, ambiguous: false };
+  }
+  const scores = {};
+  let bestId = defaultId;
+  let bestScore = 0;
+  const topIds = [];
+  for (const [id, def] of Object.entries(doc.verticals)) {
+    const s = scoreVerticalFromText(def, text);
+    scores[id] = s;
+    if (s > bestScore) {
+      bestScore = s;
+      bestId = id;
+      topIds.length = 0;
+      topIds.push(id);
+    } else if (s > 0 && s === bestScore) {
+      topIds.push(id);
+    }
+  }
+  if (bestScore === 0) {
+    return { id: defaultId, confidence: 'default', scores, ambiguous: false };
+  }
+  if (topIds.length > 1) {
+    return { id: bestId, confidence: 'low', scores, ambiguous: true, tied: topIds };
+  }
+  return {
+    id: bestId,
+    confidence: bestScore >= 2 ? 'high' : 'medium',
+    scores,
+    ambiguous: false,
+  };
+}
+
+function resolveMarketVertical({ marketVerticalArg, inferred, doc }) {
+  if (marketVerticalArg) {
+    const v = doc?.verticals?.[marketVerticalArg];
+    if (!v) {
+      throw new Error(
+        `Unknown market vertical "${marketVerticalArg}". Use an id from data/ava-market-verticals.json (e.g. financial-services, government-public).`
+      );
+    }
+    return { id: marketVerticalArg, ...v, source: 'cli' };
+  }
+  const def = doc?.verticals?.[inferred.id] || {};
+  return {
+    id: inferred.id,
+    ...def,
+    source: 'inferred',
+    inferenceConfidence: inferred.confidence,
+    ambiguous: inferred.ambiguous,
+  };
 }
 
 function axlSessionsRootCandidates(customRoot, workspaceRoots = []) {
@@ -448,6 +532,7 @@ function persistComplianceArtifacts({
   pdfPath,
   reportKind,
   activeSector,
+  activeMarketVertical,
   scData,
 }) {
   const copies = [];
@@ -492,6 +577,8 @@ function persistComplianceArtifacts({
     complianceRunDir: outDir,
     reportKind,
     sector: activeSector,
+    marketVertical: activeMarketVertical?.id || null,
+    marketVerticalLabel: activeMarketVertical?.label || null,
     runId: scData?.run_id || null,
     agentId: scData?.agentId || null,
     version: scData?.version || null,
@@ -1053,6 +1140,7 @@ function renderHtml({
   evaluationSuite,
   deferredThemes,
   suiteLabels,
+  activeMarketVertical,
 }) {
   const isVerification = !!verificationMode;
   const isMitigationOutcome = !!mitigationOutcomeMode;
@@ -1089,6 +1177,11 @@ function renderHtml({
     ? `<span class="pill pill-customer hero-pill">${escapeHtml(axlCustomer)}</span>`
     : sessionContext?.customerLabel
     ? `<span class="pill pill-customer hero-pill">${escapeHtml(sessionContext.customerLabel)}</span>`
+    : '';
+  const verticalBadge = activeMarketVertical?.label
+    ? `<span class="pill pill-vertical hero-pill" title="Market vertical: ${escapeHtml(activeMarketVertical.id || '')}">${escapeHtml(
+        activeMarketVertical.label
+      )}</span>`
     : '';
   const docSub = isMitigationOutcome
     ? 'Post-mitigation retest after AVA version update; recorded fixes, baseline comparison, and residual themes.'
@@ -1546,15 +1639,13 @@ function renderHtml({
 
   <header class="doc-header hero">
     <h1 class="doc-title">${escapeHtml(docTitle)}</h1>
-    <p class="doc-sub">${escapeHtml(docSub)} ${customerBadge}</p>
+    <p class="doc-sub">${escapeHtml(docSub)} ${customerBadge}${verticalBadge}</p>
     ${axlOutputDir ? `<p class="doc-sub" style="font-size:0.82rem;opacity:0.85">Saved for customer: <span class="mono">${escapeHtml(displayPath(axlOutputDir))}</span></p>` : ''}
   </header>
 
   <section class="section banner" aria-label="Disclaimer">
-    <strong>Disclaimer — not legal advice</strong>
-    This report maps evaluation results to topics described in the bundled research compendium
-    (<cite>AI and Virtual Agent Laws, Court Cases and Compliance Standards</cite>, v.${escapeHtml(docVersion)} in source).
-    It does not analyze your specific jurisdictional footprint. Have qualified counsel confirm applicability before relying on any entry.
+    <strong>Disclaimer — not legal or compliance advice</strong>
+  <p><strong>Genesys does not provide legal or compliance advice.</strong> This tool and the reports it generates are offered for informational purposes only. They are intended to help surface <em>possible</em> issues or discussion topics by mapping Agentic Virtual Agent (AVA) evaluation results to themes described in a bundled research compendium (<cite>AI and Virtual Agent Laws, Court Cases and Compliance Standards</cite>, v.${escapeHtml(docVersion)}). Automated keyword matching is not a legal opinion, regulatory filing, audit, or certification of your AVA, organization, industry, or jurisdictions. This report does not assess your full legal or compliance posture. You are solely responsible for engaging qualified legal and compliance professionals to determine whether any law or regulation applies to you, and what actions are required. Do not rely on this report as a substitute for professional advice.</p>
   </section>
 
   <section class="section exec-summary" aria-labelledby="exec-h">
@@ -1590,6 +1681,13 @@ function renderHtml({
       </div>
     </div>
 
+    ${
+      activeMarketVertical?.label
+        ? `<p class="muted"><strong>Market vertical:</strong> ${escapeHtml(activeMarketVertical.label)} (<span class="mono">${escapeHtml(
+            activeMarketVertical.id || ''
+          )}</span>) — ${escapeHtml(activeMarketVertical.description || '')}</p>`
+        : ''
+    }
     <p class="muted"><strong>Sector profile:</strong> ${escapeHtml(sectorProfile.label || sectorKey)} — ${escapeHtml(
     sectorProfile.description || ''
   )}</p>
@@ -1654,7 +1752,7 @@ function renderHtml({
 
   <section class="section" id="mitigation-catalog" aria-labelledby="mit-h">
     <h2 id="mit-h" class="section-head">Mitigation catalog</h2>
-    <p class="muted">For each matched theme: <strong>possible fines / exposure</strong> (statutory maxima from the bundled v1.4 penalty tables) and <strong>mitigation steps</strong> (deduplicated). Not legal advice — confirm applicability with counsel.</p>
+    <p class="muted">For each matched theme: <strong>possible fines / exposure</strong> (statutory maxima from the bundled v1.4 penalty tables) and <strong>mitigation steps</strong> (deduplicated). Illustrative only — not legal or compliance advice from Genesys; confirm applicability and obligations with qualified counsel.</p>
     ${mitigationHtml}
   </section>
 
@@ -1693,8 +1791,9 @@ async function main() {
       'Usage: node generate-compliance-report.js --scorecard <post-mitigation scorecard.json> [options]\n' +
         '  [--baseline-scorecard <prior scorecard.json>] [--mitigations <mitigations.json>]\n' +
         '  [--sector commercial|government|healthcare] or --commercial | --government | --healthcare\n' +
+        '  [--market-vertical <id>]  commercial vertical → sector (+ optional ava-role); see data/ava-market-verticals.json\n' +
         '  [--deployment commercial|us-government]  (legacy alias for --sector)\n' +
-        '  [--ava-design <design-artifact.json>]  Infer sector when flags omitted\n' +
+        '  [--ava-design <design-artifact.json>]  Infer sector / market vertical when flags omitted\n' +
         '  [--mitigation-report]  Use compliance-mitigation-outcome-report.html after retest\n' +
         '  [--evaluation-suite functional|corner-security|empathy|all]  Filter theme map (auto-detect from test IDs)\n' +
         '  [--ava-role godaddy-dbs]  Suppress themes not pertaining to role (see data/ava-role-profiles.json)\n' +
@@ -1812,13 +1911,78 @@ async function main() {
     }
   }
 
+  const inferenceText = loadInferenceContext({
+    avaDesignPath: args.avaDesign,
+    specPath,
+    scorecardPath: args.scorecard,
+  });
+  const verticalsDoc = loadMarketVerticals();
+  let activeMarketVertical = null;
+  if (verticalsDoc) {
+    const inferredVertical = inferMarketVerticalFromText(inferenceText, verticalsDoc);
+    try {
+      activeMarketVertical = resolveMarketVertical({
+        marketVerticalArg: args.marketVertical,
+        inferred: inferredVertical,
+        doc: verticalsDoc,
+      });
+    } catch (e) {
+      console.error(e.message || String(e));
+      process.exit(1);
+    }
+    if (!args.marketVerticalExplicit) {
+      const needsVertical =
+        inferredVertical.confidence === 'default' ||
+        inferredVertical.confidence === 'low' ||
+        inferredVertical.ambiguous;
+      if (needsVertical) {
+        console.log(
+          JSON.stringify({
+            avaComplianceChecker: 'market_vertical_inference',
+            needsUserMarketVertical: true,
+            suggestedVertical: activeMarketVertical.id,
+            verticalOptions: Object.entries(verticalsDoc.verticals || {}).map(([id, v]) => ({
+              id,
+              label: v.label,
+              sector: v.sector,
+            })),
+            message:
+              'Market vertical was not set with --market-vertical. Ask the facilitator or customer which market vertical this AVA serves before sharing final compliance conclusions.',
+          })
+        );
+      } else {
+        console.log(
+          JSON.stringify({
+            avaComplianceChecker: 'market_vertical_inference',
+            inferredMarketVertical: activeMarketVertical.id,
+            label: activeMarketVertical.label,
+            sector: activeMarketVertical.sector,
+            confidence: inferredVertical.confidence,
+          })
+        );
+      }
+    } else {
+      console.log(
+        JSON.stringify({
+          avaComplianceChecker: 'market_vertical_inference',
+          marketVertical: activeMarketVertical.id,
+          label: activeMarketVertical.label,
+          sector: activeMarketVertical.sector,
+          source: 'cli',
+        })
+      );
+    }
+    if (!args.sectorExplicit && activeMarketVertical.sector) {
+      args.sector = activeMarketVertical.sector;
+    }
+    if (!args.avaRole && activeMarketVertical.ava_role) {
+      args.avaRole = activeMarketVertical.ava_role;
+    }
+  }
+
   let activeSector = args.sector ? normalizeSector(args.sector) : null;
   if (!args.sectorExplicit) {
-    const inferred = inferSectorFromArtifacts({
-      avaDesignPath: args.avaDesign,
-      specPath,
-      scorecardPath: args.scorecard,
-    });
+    const inferred = inferSectorFromText(inferenceText);
     if (!activeSector) activeSector = inferred.sector;
     if (!args.sectorExplicit && (inferred.confidence === 'low' || inferred.ambiguous)) {
       console.log(
@@ -1945,6 +2109,7 @@ async function main() {
     evaluationSuite,
     deferredThemes: deferredThemes || [],
     suiteLabels: evidenceMapRaw.evaluation_suite_labels || {},
+    activeMarketVertical: activeMarketVertical || null,
   });
 
   let outHtmlName = args.outputHtml;
@@ -1990,6 +2155,7 @@ async function main() {
     pdfPath: pdfWritten ? pdfPath : null,
     reportKind,
     activeSector,
+    activeMarketVertical: activeMarketVertical || null,
     scData,
   });
   console.log('Wrote artifact manifest:', manifestPath);

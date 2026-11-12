@@ -1,13 +1,13 @@
 {
   "name": "ava-compliance-checker",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "bundledReferenceDocument": {
     "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
-    "sha256": "f003d99bcb71024adcbf6528ab59efb46b594628a95ed5ffbe4dca2ccfe28068",
-    "note": "Sole legal/compliance corpus; v1.5 November 2026 (§3.11 IRS 1075 and federal/state regulated data)."
+    "sha256": "0b0800b40ae7ac37b78fae883c9a8e79eac0742276cc80a3b879c329baf1ae63",
+    "note": "Sole legal/compliance corpus; v1.5 November 2026 refresh (Utah §1.2, §3.11 IRS 1075)."
   },
-  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector profiles; compliance artifacts under axl-sessions/AXL-*/compliance/.",
+  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; market vertical and sector profiles; compliance artifacts under axl-sessions/AXL-*/compliance/.",
   "author": "Stern (custom)",
   "license": "Internal redistribution; not an official Genesys release.",
   "requires": {
@@ -34,7 +34,9 @@
     "examples/mitigations.example.json",
     "data/evidence-map.json",
     "data/ava-role-profiles.json",
+    "data/ava-market-verticals.json",
     "references/customer-documentation-scope.md",
+    "references/market-vertical-selection.md",
     "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "scripts/generate-compliance-report.js",
     "scripts/package.ps1"

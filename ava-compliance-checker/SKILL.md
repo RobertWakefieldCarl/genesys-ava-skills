@@ -3,12 +3,12 @@ name: ava-compliance-checker
 description: >-
   Assess a published Genesys Cloud AVA against a bundled laws-and-compliance compendium, map
   ava-evaluate scorecard results to regulatory themes and remediation, and produce HTML and PDF
-  reports. Sector profiles (commercial, government, healthcare) scope which laws apply. Optional
+  reports. Market vertical and sector profiles scope which laws apply. Optional
   mitigation workflow with retest and mitigation-outcome report. Use after evaluation or for counsel/risk readouts.
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.5.0
+  version: 1.5.2
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -22,7 +22,9 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 
-**This is not legal advice.** Reports must repeat that counsel should confirm applicability.
+### Disclaimer (repeat in customer-facing readouts)
+
+**Genesys does not provide legal or compliance advice.** This skill and its HTML/PDF reports are informational tools only: they map AVA evaluation results to *possible* themes in the bundled compendium. They do not constitute a legal opinion, regulatory determination, audit, or certification. The customer is responsible for qualified counsel to confirm applicability and required actions. Generated reports include this disclaimer in the banner — do not remove or soften it when sharing artifacts.
 
 ## Install / redistribute
 
@@ -51,24 +53,42 @@ After Phase 1, **ask** whether they want the skill to help **mitigate** issues f
 
 ---
 
-### Phase 0 — Sector profile (commercial | government | healthcare)
+### Phase 0 — Market vertical (pick the AVA’s business context)
+
+**Which laws apply depends on what the AVA does and which market it serves.** Start here before sector flags.
+
+1. Read the AVA spec, role, and use cases (not facilitator POV/deck/call-flow docs — see **`references/customer-documentation-scope.md`**).
+2. Map to a **`--market-vertical`** id in **`data/ava-market-verticals.json`** (each row sets **sector** and may set **`--ava-role`**).
+3. If the generator prints `needsUserMarketVertical: true`, or you are unsure, **AskQuestion** (or ask on a live call):
+
+   > “Which market vertical should we use for this compliance pass — for example general commercial, financial services, healthcare payer/provider, government, telecom outbound, or domain brokerage?”
+
+   Use the labels from **`references/market-vertical-selection.md`**.
+
+4. Re-run the generator with **`--market-vertical <id>`** once confirmed.
+
+Stdout may include `avaComplianceChecker: market_vertical_inference`.
+
+### Phase 0b — Sector profile (commercial | government | healthcare)
+
+Vertical choice usually implies sector; override only when the customer explicitly needs a different sector profile.
 
 Controls in `evidence-map.json` can be tagged **`sectors`**: `government`-only (FedRAMP §3.10), `healthcare`-only (HIPAA-heavy row), or universal (no tag = all).
 
 | Flag | When to use |
 |------|-------------|
 | **`--commercial`** (default) | Private sector — excludes government-only and healthcare-only control rows. |
-| **`--government`** | US state/federal — commercial baseline **plus** FedRAMP, OMB, CJIS, IRS 1075, DoD IL/CMMC. |
+| **`--government`** | US state/federal — commercial baseline **plus** FedRAMP, OMB, CJIS, IRS 1075 (§3.11), DoD IL/CMMC. |
 | **`--healthcare`** | Payers/providers — commercial baseline **plus** HIPAA/CMS/Section 1557/UR themes. |
 
 Also: **`--sector commercial|government|healthcare`**. Legacy **`--deployment us-government`** → `government`.
 
-**If the user did not pass a sector flag:**
+**If the user did not pass a sector flag and vertical did not resolve it:**
 
 1. Infer from AVA artifacts (`--ava-design`, lifecycle `sage-agent.json` / `design-artifact.json`, `spec-artifact.md`, AXL spec).
-2. If inference is **low confidence** or **ambiguous**, use **AskQuestion** to let the user pick **Commercial**, **Government**, or **Healthcare** before you present compliance conclusions.
+2. If inference is **low confidence** or **ambiguous**, use **AskQuestion** for **Commercial**, **Government**, or **Healthcare**.
 
-The generator prints a JSON line `avaComplianceChecker: sector_inference` when it needs user confirmation.
+The generator prints `avaComplianceChecker: sector_inference` when it needs user confirmation.
 
 ### Evaluation suite and AVA role (false-positive control)
 
@@ -88,8 +108,7 @@ Read **`references/customer-documentation-scope.md`** — do **not** map `compan
 node scripts/generate-compliance-report.js ^
   --scorecard "...\.ava-lifecycle\axl-web-services-broker-routing\eval-runs\...\scorecard.json" ^
   --session-dir "C:\...\axl-sessions\AXL-godaddy" ^
-  --commercial ^
-  --ava-role godaddy-dbs
+  --market-vertical domain-brokerage
 ```
 
 Reports add **§ AVA scope and evaluation context** listing deferred themes and out-of-scope customer docs.
@@ -101,7 +120,7 @@ Reports add **§ AVA scope and evaluation context** listing deferred themes and 
 1. Resolve `<SkillDir>` and the AVA **`.ava-lifecycle/<slug>/`** (from the scorecard path or `--lifecycle-dir`).
 2. Resolve the AXL workshop folder **`axl-sessions/AXL-<customer>/`** (`--session-dir`, `--customer`, path inference, or **agent_id** search across session folders).
 3. Locate the user's `scorecard.json` (usually under `.ava-lifecycle/<slug>/eval-runs/...`).
-4. Resolve sector (Phase 0).
+4. Resolve market vertical (Phase 0) and sector (Phase 0b).
 5. **Default artifact root (required for AXL AVAs):** store everything under the session folder, not the lifecycle tree:
 
    | Artifact | Path |
@@ -177,7 +196,7 @@ Deliver HTML/PDF: **Mitigations applied**, **Before / after**, retest details, *
 
 | Section | Content |
 |--------|---------|
-| Executive summary | Pass/fail/review, themes, **sector profile**, unmapped count |
+| Executive summary | Pass/fail/review, themes, **market vertical**, **sector profile**, unmapped count |
 | What was tested and why | Spec + test-case purpose when available |
 | Mitigations applied | From `--mitigations` JSON *(verification / outcome)* |
 | Before / after | Baseline vs retest per `testCaseId` |
@@ -192,7 +211,9 @@ Edit **`data/evidence-map.json`**: keywords, `sectors`, `possible_fines`, citati
 
 | Path | Role |
 |------|------|
-| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.4) |
+| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.5) |
+| `data/ava-market-verticals.json` | Vertical → sector + optional `ava-role` |
 | `data/evidence-map.json` | Keyword → control → remediation |
+| `references/market-vertical-selection.md` | Facilitator cheat sheet for Phase 0 |
 | `examples/mitigations.example.json` | Sample mitigations file |
 | `scripts/generate-compliance-report.js` | HTML/PDF builder |

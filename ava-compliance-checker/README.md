@@ -1,8 +1,10 @@
 # ava-compliance-checker
 
-**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.5.0 — canonical for this fork).
+**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.5.1).
 
 Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.5) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer).
+
+**Disclaimer:** Genesys does not provide legal or compliance advice. Reports surface possible AVA-related themes for discussion only; customers must rely on their own qualified counsel for applicability and obligations.
 
 **Install:** extract the release zip and run `install.ps1` (Windows) or `install.sh` (macOS/Linux) from the extracted `ava-compliance-checker` folder — default target `~/.cursor/skills/ava-compliance-checker/`. Use `-All` / `--all` to copy into every detected IDE base under your profile.
 
@@ -16,7 +18,9 @@ node scripts/generate-compliance-report.js --scorecard "path/to/scorecard.json" 
 
 Compliance artifacts default to **`axl-sessions/AXL-<customer>/compliance/<run-id>/`** (HTML, PDF, scorecard snapshots, reference MD copy, `compliance-run.json`). Resolve the session with `--session-dir`, `--lifecycle-dir`, `--customer`, or agent_id lookup. Use `--out-dir` only to override. Reports include **What was tested and why** (auto-loads `spec-artifact.md` from the session folder).
 
-**Sector profiles** (pick one): `--commercial` (default), `--government`, `--healthcare` — or `--sector <name>`. Legacy: `--deployment us-government` → government. FedRAMP §3.10 rows apply only under **government**; HIPAA-heavy row under **healthcare**.
+**Market vertical** (recommended first): `--market-vertical <id>` from `data/ava-market-verticals.json` — sets sector and optional `--ava-role`. If inference is weak, the agent should ask the customer for vertical before legal conclusions.
+
+**Sector profiles** (override when needed): `--commercial` (default), `--government`, `--healthcare` — or `--sector <name>`. Legacy: `--deployment us-government` → government. FedRAMP §3.10 rows apply only under **government**; HIPAA-heavy row under **healthcare**.
 
 **Verification (after fixes + retest):** `--baseline-scorecard`, optional `--mitigations` → `compliance-verification-report.html`.
 

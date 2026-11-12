@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "notes": "Market vertical picks the compliance sector and optional ava-role profile. If unknown, the agent must ask the facilitator/customer before final legal readouts.",
+  "default_vertical": "general-commercial",
+  "verticals": {
+    "general-commercial": {
+      "label": "General commercial / cross-industry",
+      "sector": "commercial",
+      "description": "Private-sector customer service, sales, or support without regulated health, government, or lending decisions."
+    },
+    "financial-services": {
+      "label": "Financial services / banking / lending",
+      "sector": "commercial",
+      "description": "Credit, accounts, payments, fraud — ECOA/FCRA, PCI, GLBA themes in scope.",
+      "inference_keywords": ["bank", "lending", "credit card", "mortgage", "fcra", "ecoa", "adverse action", "fintech"]
+    },
+    "insurance-health": {
+      "label": "Health insurance / payer",
+      "sector": "healthcare",
+      "description": "Claims, prior auth, coverage — HIPAA, CMS, NAIC, UR.",
+      "inference_keywords": ["health plan", "payer", "medicare", "medicaid", "prior auth", "medical necessity"]
+    },
+    "insurance-pc": {
+      "label": "Property & casualty / commercial insurance",
+      "sector": "commercial",
+      "description": "Auto, home, commercial lines — NAIC AI governance; not clinical HIPAA unless PHI appears.",
+      "inference_keywords": ["property casualty", "p&c", "insurance claim", "policyholder", "underwriter", "naic"]
+    },
+    "healthcare-provider": {
+      "label": "Healthcare provider / clinical",
+      "sector": "healthcare",
+      "description": "Patients, clinicians, appointments, PHI.",
+      "inference_keywords": ["patient", "hospital", "clinic", "ehr", "hipaa", "provider", "nurse", "physician"]
+    },
+    "government-public": {
+      "label": "US government — federal, state, or local",
+      "sector": "government",
+      "description": "Agency, public-sector cloud — FedRAMP §3.10, OMB, CJIS, IRS 1075 / §3.11.",
+      "inference_keywords": ["federal agency", "state agency", "fedramp", "public sector", "government contract", "omb"]
+    },
+    "telecom-outbound": {
+      "label": "Telecom / outbound campaigns",
+      "sector": "commercial",
+      "description": "Robocalls, SMS, AI voice outbound — TCPA and state mini-TCPA in scope.",
+      "inference_keywords": ["tcpa", "robocall", "outbound", "telemarket", "10dlc", "sms campaign"]
+    },
+    "domain-brokerage": {
+      "label": "Domain brokerage / confidential acquisition",
+      "sector": "commercial",
+      "ava_role": "godaddy-dbs",
+      "description": "GoDaddy-style DBS routing — defers lending, hiring, health-insurance UR false positives.",
+      "inference_keywords": ["domain broker", "broker routing", "shopper id", "acquisition", "godaddy", "dbs"]
+    },
+    "retail-ecommerce": {
+      "label": "Retail / e-commerce",
+      "sector": "commercial",
+      "description": "Orders, returns, consumer chat — BOT disclosure, privacy, accessibility.",
+      "inference_keywords": ["retail", "ecommerce", "order status", "return", "merchant"]
+    },
+    "education": {
+      "label": "Education / EdTech",
+      "sector": "commercial",
+      "description": "Students and guardians — COPPA and companion-chat rules where minors appear.",
+      "inference_keywords": ["student", "school", "ferpa", "minor", "parent", "coppa", "university"]
+    }
+  }
+}
