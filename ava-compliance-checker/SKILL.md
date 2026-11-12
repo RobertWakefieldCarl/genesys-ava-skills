@@ -8,7 +8,7 @@ description: >-
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.4.3
+  version: 1.5.0
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -18,7 +18,7 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 `<SkillDir>/assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`
 
-(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.4 November 2026** — penalty tables, worldwide AI index §1.10, Part 3 §§3.9–3.10 ISO/SOC and government / FedRAMP).
+(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.5 November 2026** — §3.11 IRS 1075 / regulated data; v1.4 penalty tables, §1.10 worldwide, Part 3 §§3.9–3.10 ISO/SOC and government / FedRAMP).
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 

@@ -1059,7 +1059,7 @@ function renderHtml({
   const meta = scData.metadata || {};
   const summary = scData.summary || {};
   const generated = new Date().toISOString();
-  const docVersion = evidenceMap.source_document_version || '1.4 (November 2026)';
+  const docVersion = evidenceMap.source_document_version || '1.5 (November 2026)';
   const sectorKey = activeSector || 'commercial';
   const sectorProfile = (sectorProfiles || {})[sectorKey] || {
     label: sectorKey,

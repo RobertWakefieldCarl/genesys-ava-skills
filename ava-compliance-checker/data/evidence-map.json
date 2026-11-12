@@ -1,7 +1,7 @@
 {
   "schema_version": "1.3",
   "source_bundled": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
-  "source_document_version": "1.4 (November 2026)",
+  "source_document_version": "1.5 (November 2026)",
   "notes": "Controls may set sectors and evaluation_suites (functional, corner-security, empathy). Use --evaluation-suite and --ava-role to limit false positives (e.g. GoDaddy DBS). Keywords avoid bare stems like record/account/claim.",
   "evaluation_suite_labels": {
     "functional": "Product / workflow eval — full commercial theme set",
@@ -487,7 +487,7 @@
         "cjis", "criminal justice", "fbi", "irs", "1075", "federal tax", "fti",
         "safeguard", "taxpayer", "law enforcement"
       ],
-      "document_sections": ["Part 3 §3.10.4 Criminal justice and tax data"],
+      "document_sections": ["Part 3 §3.10.4 Criminal justice and tax data", "Part 3 §3.11 IRS Publication 1075 and federal/state regulated data"],
       "regulatory_refs": [
         "FBI CJIS Security Policy v6.1 (June 2026) — no AI exemption for CJIS-touched systems.",
         "IRS Publication 1075 — federal tax information in prompts, transcripts, logs, and retrieval."

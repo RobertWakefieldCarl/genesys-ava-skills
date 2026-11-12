@@ -1,6 +1,8 @@
 # ava-compliance-checker
 
-Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.4) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer).
+**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.5.0 — canonical for this fork).
+
+Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.5) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer).
 
 **Install:** extract the release zip and run `install.ps1` (Windows) or `install.sh` (macOS/Linux) from the extracted `ava-compliance-checker` folder — default target `~/.cursor/skills/ava-compliance-checker/`. Use `-All` / `--all` to copy into every detected IDE base under your profile.
 
