@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.3",
+  "schema_version": "1.4",
   "source_bundled": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
-  "source_document_version": "1.5 (November 2026)",
+  "source_document_version": "1.6 (November 2026)",
   "notes": "Controls may set sectors and evaluation_suites (functional, corner-security, empathy). Use --evaluation-suite and --ava-role to limit false positives (e.g. GoDaddy DBS). Keywords avoid bare stems like record/account/claim.",
   "evaluation_suite_labels": {
     "functional": "Product / workflow eval — full commercial theme set",
@@ -308,23 +308,33 @@
       "title": "Accessibility (WCAG, ADA, EAA)",
       "keywords": [
         "accessib", "wcag", "screen reader", "keyboard", "ada", "captions", "deaf",
-        "blind", "disability"
+        "blind", "disability", "aria", "relay", "rtt", "voice only", "timeout", "captcha"
       ],
-      "document_sections": ["Part 1 §§1.4 ADA/Section 508", "Part 3 §3.6", "Part 1 §1.5 EAA"],
+      "document_sections": [
+        "Part 3 §3.13 ADA and US accessibility regulations",
+        "Part 1 §§1.4 ADA/Section 508",
+        "Part 3 §3.6",
+        "Part 1 §1.5 EAA"
+      ],
       "regulatory_refs": [
-        "ADA; DOJ Title II web rule timelines; Section 508 (Part 1 §1.4).",
+        "ADA Titles II and III; DOJ Title II web rule (WCAG 2.1 AA, compliance April 2027/2028); Section 504/HHS rule (Part 3 §3.13).",
+        "Section 508; CVAA/FCC relay and RTT for voice bots (Part 3 §3.13).",
         "European Accessibility Act (Part 3 §3.6)."
       ],
-      "case_law_refs": [],
+      "case_law_refs": [
+        "Website accessibility litigation trends; AI-generated pro se filings (Part 3 §3.13.3)."
+      ],
       "remediation": [
-        "Ensure chat widgets and voice fallbacks meet WCAG 2.1/2.2 AA targets for in-scope channels.",
-        "Offer equivalent text channels where voice-only barriers exist."
+        "Target WCAG 2.1 AA (2.2 AA best practice) for chat widgets; keyboard, focus, live regions for streaming replies.",
+        "Offer text/voice alternatives, relay/RTT paths, and human handoff without penalty; avoid inaccessible CAPTCHA.",
+        "Maintain VPAT/ACR for Section 508 and public-sector procurements; regression-test on model/UI changes."
       ],
       "possible_fines": [
-        "DOJ / ADA Title III: injunctive relief, attorney's fees, and civil penalties in settlements (amounts vary; Part 1 §1.4).",
+        "DOJ ADA Title III civil penalties: up to USD 118,225 first violation; USD 236,451 subsequent (2025 amounts; Part 3 §3.13.1).",
+        "California Unruh Act: at least USD 4,000 per violation plus fees (Part 3 §3.13.2).",
+        "Private Title III suits: injunctions and attorney's fees (no statutory damages under Title III itself; Part 3 §3.13.1).",
         "Germany BFSG accessibility: fines up to EUR 100,000 (background; verify; Part 1 §1.6).",
-        "UK Equality Act 2010: uncapped compensation ordered by courts and tribunals (Part 1 §1.7).",
-        "European Accessibility Act: effective, proportionate, dissuasive penalties set by member states (Part 1 §1.5)."
+        "European Accessibility Act: member-state penalties (Part 1 §1.5)."
       ]
     },
     {
@@ -354,20 +364,27 @@
     {
       "id": "security-llm-owasp",
       "evaluation_suites": ["functional", "corner-security"],
-      "title": "Security, prompt injection, excessive agency",
+      "title": "Security, prompt injection, excessive agency (OWASP LLM / Agentic 2026)",
       "keywords": [
-        "prompt injection", "jailbreak", "system prompt", "tool", "exfiltrat", "pii leak",
-        "secret", "credential", "bypass", "guardrail"
+        "prompt injection", "jailbreak", "system prompt", "hidden context", "tool", "exfiltrat", "pii leak",
+        "secret", "credential", "bypass", "guardrail", "excessive agency", "agentic", "goal hijack",
+        "supply chain", "poison", "vector", "embedding", "improper output", "rogue agent", "mcp"
       ],
-      "document_sections": ["Part 3 §§3.4 OWASP, NIST AI RMF", "Part 1 §1.4 safeguards"],
+      "document_sections": [
+        "Part 3 §3.12 OWASP AI and application security standards",
+        "Part 3 §§3.4 NIST AI RMF",
+        "Part 1 §1.4 safeguards"
+      ],
       "regulatory_refs": [
-        "NIST AI RMF; ISO/IEC 42001 security themes (Part 3 §3.4).",
-        "Cyber Resilience Act reporting (Part 1 §1.5) for in-scope products."
+        "OWASP Top 10 for LLM Applications 2026 (LLM01–LLM10) and Agentic Applications 2026 (ASI01–ASI10) (Part 3 §3.12).",
+        "EU AI Act Art. 15 robustness; PCI DSS Req. 6.2.4; FedRAMP SA-11 testing crosswalks (Part 3 §3.12.4).",
+        "NIST AI RMF; ISO/IEC 42001 security themes (Part 3 §3.4)."
       ],
       "case_law_refs": [],
       "remediation": [
-        "Constrain tools and parameters; human approval for irreversible or high-risk actions.",
-        "Red-team for prompt injection and unsafe tool invocation; monitor logs for exfiltration attempts."
+        "Threat-model with OWASP LLM + Agentic Top 10; red-team LLM01/ASI01–ASI03 before production.",
+        "Least-privilege tools, human approval for irreversible actions; treat all model output as untrusted (LLM03, LLM10).",
+        "Constrain retrieval, embeddings, and MCP tool servers; monitor for exfiltration and unbounded consumption (LLM02, LLM06, LLM09)."
       ],
       "possible_fines": [
         "EU Cyber Resilience Act: up to EUR 15 million or 2.5% of turnover for essential requirements (Part 1 §1.5).",

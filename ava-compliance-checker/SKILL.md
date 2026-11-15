@@ -8,7 +8,7 @@ description: >-
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.5.2
+  version: 1.6.0
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -18,7 +18,7 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 `<SkillDir>/assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`
 
-(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.5 November 2026** — §3.11 IRS 1075 / regulated data; v1.4 penalty tables, §1.10 worldwide, Part 3 §§3.9–3.10 ISO/SOC and government / FedRAMP).
+(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.6 November 2026** — §3.12 OWASP LLM/Agentic 2026, §3.13 ADA/WCAG; v1.5 §3.11 IRS 1075; v1.4 penalty tables and §1.10 worldwide).
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 
@@ -201,7 +201,7 @@ Deliver HTML/PDF: **Mitigations applied**, **Before / after**, retest details, *
 | Mitigations applied | From `--mitigations` JSON *(verification / outcome)* |
 | Before / after | Baseline vs retest per `testCaseId` |
 | Test-by-test results | Collapsible scenarios + matched law/case themes |
-| Mitigation catalog | Deduplicated remediation steps plus **`possible_fines`** exposure bullets (from compendium v1.4 penalty tables) per matched theme |
+| Mitigation catalog | Deduplicated remediation steps plus **`possible_fines`** exposure bullets (from compendium penalty tables) per matched theme |
 
 ## Customizing the map
 
@@ -211,7 +211,7 @@ Edit **`data/evidence-map.json`**: keywords, `sectors`, `possible_fines`, citati
 
 | Path | Role |
 |------|------|
-| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.5) |
+| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.6) |
 | `data/ava-market-verticals.json` | Vertical → sector + optional `ava-role` |
 | `data/evidence-map.json` | Keyword → control → remediation |
 | `references/market-vertical-selection.md` | Facilitator cheat sheet for Phase 0 |

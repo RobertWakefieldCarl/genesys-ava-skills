@@ -1,11 +1,11 @@
 {
   "name": "ava-compliance-checker",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "bundledReferenceDocument": {
     "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
-    "sha256": "0b0800b40ae7ac37b78fae883c9a8e79eac0742276cc80a3b879c329baf1ae63",
-    "note": "Sole legal/compliance corpus; v1.5 November 2026 refresh (Utah §1.2, §3.11 IRS 1075)."
+    "sha256": "0eb7e491b9cbd177cc7dd4e6ad19e9e3d72d2a6c8d21996eb6337d46c92e091c",
+    "note": "Sole legal/compliance corpus; v1.6 November 2026 (§3.12 OWASP, §3.13 ADA; regulatory refresh)."
   },
   "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; market vertical and sector profiles; compliance artifacts under axl-sessions/AXL-*/compliance/.",
   "author": "Stern (custom)",

@@ -1,8 +1,8 @@
 # ava-compliance-checker
 
-**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.5.1).
+**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.6.0).
 
-Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.5) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer).
+Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.6) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer).
 
 **Disclaimer:** Genesys does not provide legal or compliance advice. Reports surface possible AVA-related themes for discussion only; customers must rely on their own qualified counsel for applicability and obligations.
 

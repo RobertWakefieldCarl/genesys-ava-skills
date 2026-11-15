@@ -1147,7 +1147,7 @@ function renderHtml({
   const meta = scData.metadata || {};
   const summary = scData.summary || {};
   const generated = new Date().toISOString();
-  const docVersion = evidenceMap.source_document_version || '1.5 (November 2026)';
+  const docVersion = evidenceMap.source_document_version || '1.6 (November 2026)';
   const sectorKey = activeSector || 'commercial';
   const sectorProfile = (sectorProfiles || {})[sectorKey] || {
     label: sectorKey,
@@ -1752,7 +1752,7 @@ function renderHtml({
 
   <section class="section" id="mitigation-catalog" aria-labelledby="mit-h">
     <h2 id="mit-h" class="section-head">Mitigation catalog</h2>
-    <p class="muted">For each matched theme: <strong>possible fines / exposure</strong> (statutory maxima from the bundled v1.4 penalty tables) and <strong>mitigation steps</strong> (deduplicated). Illustrative only — not legal or compliance advice from Genesys; confirm applicability and obligations with qualified counsel.</p>
+    <p class="muted">For each matched theme: <strong>possible fines / exposure</strong> (statutory maxima from the bundled compendium penalty tables) and <strong>mitigation steps</strong> (deduplicated). Illustrative only — not legal or compliance advice from Genesys; confirm applicability and obligations with qualified counsel.</p>
     ${mitigationHtml}
   </section>
 
