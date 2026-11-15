@@ -10,8 +10,8 @@
     },
     "financial-services": {
       "label": "Financial services / banking / lending",
-      "sector": "commercial",
-      "description": "Credit, accounts, payments, fraud — ECOA/FCRA, PCI, GLBA themes in scope.",
+      "sector": "financial",
+      "description": "Credit, accounts, payments, fraud — ECOA/FCRA, PCI, GLBA/NYDFS themes in scope.",
       "inference_keywords": ["bank", "lending", "credit card", "mortgage", "fcra", "ecoa", "adverse action", "fintech"]
     },
     "insurance-health": {
@@ -22,7 +22,7 @@
     },
     "insurance-pc": {
       "label": "Property & casualty / commercial insurance",
-      "sector": "commercial",
+      "sector": "insurance",
       "description": "Auto, home, commercial lines — NAIC AI governance; not clinical HIPAA unless PHI appears.",
       "inference_keywords": ["property casualty", "p&c", "insurance claim", "policyholder", "underwriter", "naic"]
     },

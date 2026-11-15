@@ -11,9 +11,9 @@ Compliance themes depend on **what the AVA does** and **which market** it serves
 | Vertical ID (`--market-vertical`) | Sector | Typical laws emphasized |
 |-----------------------------------|--------|-------------------------|
 | `general-commercial` | commercial | Disclosure, privacy, security, accessibility |
-| `financial-services` | commercial | ECOA/FCRA, PCI, GLBA |
+| `financial-services` | **financial** | ECOA/FCRA, PCI, GLBA/NYDFS |
 | `insurance-health` | healthcare | HIPAA, CMS, NAIC, UR |
-| `insurance-pc` | commercial | NAIC, consumer protection |
+| `insurance-pc` | **insurance** | NAIC, consumer protection |
 | `healthcare-provider` | healthcare | HIPAA, Section 1557 |
 | `government-public` | government | FedRAMP, OMB, CJIS, IRS 1075 (§3.11) |
 | `telecom-outbound` | commercial | TCPA, STIR/SHAKEN |

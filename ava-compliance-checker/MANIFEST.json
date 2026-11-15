@@ -1,13 +1,13 @@
 {
   "name": "ava-compliance-checker",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "bundledReferenceDocument": {
     "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
-    "sha256": "0eb7e491b9cbd177cc7dd4e6ad19e9e3d72d2a6c8d21996eb6337d46c92e091c",
-    "note": "Sole legal/compliance corpus; v1.6 November 2026 (§3.12 OWASP, §3.13 ADA; regulatory refresh)."
+    "sha256": "ee4d073d8730a5e91cd19753330a3ede3529eebc519ebde0abb6c75f6bbd6e84",
+    "note": "Sole legal/compliance corpus; v1.7 November 2026 (LatAm/APAC, §2.12–2.16; prior §3.12–3.13 OWASP/ADA)."
   },
-  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; market vertical and sector profiles; compliance artifacts under axl-sessions/AXL-*/compliance/.",
+  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector profiles including financial and insurance; compliance artifacts under axl-sessions/AXL-*/compliance/.",
   "author": "Stern (custom)",
   "license": "Internal redistribution; not an official Genesys release.",
   "requires": {
@@ -37,6 +37,7 @@
     "data/ava-market-verticals.json",
     "references/customer-documentation-scope.md",
     "references/market-vertical-selection.md",
+    "references/skill-overview.md",
     "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "scripts/generate-compliance-report.js",
     "scripts/package.ps1"

@@ -8,7 +8,7 @@ description: >-
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.6.0
+  version: 1.7.0
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -18,7 +18,7 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 `<SkillDir>/assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`
 
-(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.6 November 2026** — §3.12 OWASP LLM/Agentic 2026, §3.13 ADA/WCAG; v1.5 §3.11 IRS 1075; v1.4 penalty tables and §1.10 worldwide).
+(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.7 November 2026** — expanded US states, LatAm/APAC, §§2.12–2.16 enforcement; v1.6 §3.12 OWASP, §3.13 ADA; v1.5 §3.11 IRS 1075).
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 
@@ -69,19 +69,23 @@ After Phase 1, **ask** whether they want the skill to help **mitigate** issues f
 
 Stdout may include `avaComplianceChecker: market_vertical_inference`.
 
-### Phase 0b — Sector profile (commercial | government | healthcare)
+### Phase 0b — Sector profile (commercial | government | healthcare | financial | insurance)
 
 Vertical choice usually implies sector; override only when the customer explicitly needs a different sector profile.
 
-Controls in `evidence-map.json` can be tagged **`sectors`**: `government`-only (FedRAMP §3.10), `healthcare`-only (HIPAA-heavy row), or universal (no tag = all).
+Controls in `evidence-map.json` can be tagged **`sectors`**: exclusive rows for `government`, `healthcare`, `financial`, or `insurance`; untagged rows apply to every profile’s commercial baseline.
 
 | Flag | When to use |
 |------|-------------|
-| **`--commercial`** (default) | Private sector — excludes government-only and healthcare-only control rows. |
+| **`--commercial`** (default) | Cross-industry private sector — excludes government-, healthcare-, financial-, and insurance-only rows. |
 | **`--government`** | US state/federal — commercial baseline **plus** FedRAMP, OMB, CJIS, IRS 1075 (§3.11), DoD IL/CMMC. |
-| **`--healthcare`** | Payers/providers — commercial baseline **plus** HIPAA/CMS/Section 1557/UR themes. |
+| **`--healthcare`** | Payers/providers — commercial baseline **plus** HIPAA/CMS/Section 1557/UR; includes insurer NAIC row when tagged for health payer. |
+| **`--financial`** | Banking, lending, payments — commercial baseline **plus** PCI, ECOA/FCRA, GLBA/NYDFS. |
+| **`--insurance`** | P&C or insurer operations — commercial baseline **plus** NAIC AI governance and UR/claims themes. |
 
-Also: **`--sector commercial|government|healthcare`**. Legacy **`--deployment us-government`** → `government`.
+Also: **`--sector commercial|government|healthcare|financial|insurance`**. Legacy **`--deployment us-government`** → `government`.
+
+Full switch reference: **`references/skill-overview.md`**.
 
 **If the user did not pass a sector flag and vertical did not resolve it:**
 
@@ -211,7 +215,8 @@ Edit **`data/evidence-map.json`**: keywords, `sectors`, `possible_fines`, citati
 
 | Path | Role |
 |------|------|
-| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.6) |
+| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.7) |
+| `references/skill-overview.md` | Coverage, workflow, and CLI switch reference |
 | `data/ava-market-verticals.json` | Vertical → sector + optional `ava-role` |
 | `data/evidence-map.json` | Keyword → control → remediation |
 | `references/market-vertical-selection.md` | Facilitator cheat sheet for Phase 0 |

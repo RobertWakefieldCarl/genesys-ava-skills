@@ -78,6 +78,12 @@ function parseArgs() {
     } else if (argv[i] === '--healthcare') {
       out.sector = 'healthcare';
       out.sectorExplicit = true;
+    } else if (argv[i] === '--financial') {
+      out.sector = 'financial';
+      out.sectorExplicit = true;
+    } else if (argv[i] === '--insurance') {
+      out.sector = 'insurance';
+      out.sectorExplicit = true;
     } else if (argv[i] === '--deployment' && argv[i + 1]) {
       const d = argv[++i].toLowerCase();
       out.sector = d === 'us-government' ? 'government' : d;
@@ -102,8 +108,12 @@ function normalizeSector(input) {
     .trim();
   if (s === 'us-government' || s === 'government' || s === 'gov') return 'government';
   if (s === 'healthcare' || s === 'health' || s === 'hipaa') return 'healthcare';
+  if (s === 'financial' || s === 'finance' || s === 'fintech' || s === 'banking') return 'financial';
+  if (s === 'insurance' || s === 'insurer') return 'insurance';
   if (s === 'commercial' || s === 'private') return 'commercial';
-  throw new Error(`Unknown sector "${input}". Use commercial, government, or healthcare.`);
+  throw new Error(
+    `Unknown sector "${input}". Use commercial, government, healthcare, financial, or insurance.`
+  );
 }
 
 function controlSectors(c) {
@@ -114,27 +124,63 @@ function controlSectors(c) {
   return ['all'];
 }
 
-/** Sector profiles: government-only and healthcare-only rows are filtered by active sector. */
+const EXCLUSIVE_SECTOR_TAGS = new Set(['government', 'healthcare', 'financial', 'insurance']);
+
+/** Sector profiles: exclusive rows (government, healthcare, financial, insurance) filter by active sector. */
 function controlMatchesSector(c, sector) {
   const sectors = controlSectors(c);
   if (sectors.includes('all')) return true;
+
+  const onlyExclusive = sectors.length === 1 && EXCLUSIVE_SECTOR_TAGS.has(sectors[0]);
+  const has = (tag) => sectors.includes(tag);
+
+  const blockedForCommercial = (tag) => has(tag) && !has('commercial');
+
   if (sector === 'commercial') {
-    if (sectors.includes('commercial')) return true;
-    if (sectors.length === 1 && (sectors[0] === 'government' || sectors[0] === 'healthcare')) return false;
-    if (sectors.includes('government') && !sectors.includes('commercial')) return false;
-    if (sectors.includes('healthcare') && !sectors.includes('commercial')) return false;
+    if (onlyExclusive) return false;
+    if (blockedForCommercial('government')) return false;
+    if (blockedForCommercial('healthcare')) return false;
+    if (blockedForCommercial('financial')) return false;
+    if (blockedForCommercial('insurance')) return false;
     return true;
   }
+
   if (sector === 'government') {
-    if (sectors.includes('government') || sectors.includes('commercial')) return true;
-    if (sectors.length === 1 && sectors[0] === 'healthcare') return false;
+    if (has('government') || has('commercial')) return true;
+    if (onlyExclusive) return false;
+    if (blockedForCommercial('healthcare')) return false;
+    if (blockedForCommercial('financial')) return false;
+    if (blockedForCommercial('insurance')) return false;
     return true;
   }
+
   if (sector === 'healthcare') {
-    if (sectors.includes('healthcare') || sectors.includes('commercial')) return true;
-    if (sectors.length === 1 && sectors[0] === 'government') return false;
-    return !sectors.includes('government') || sectors.includes('commercial');
+    if (has('healthcare') || has('commercial')) return true;
+    if (onlyExclusive && !has('healthcare')) return false;
+    if (blockedForCommercial('government')) return false;
+    if (blockedForCommercial('financial')) return false;
+    if (blockedForCommercial('insurance') && !has('healthcare')) return false;
+    return !has('government') || has('commercial') || has('healthcare');
   }
+
+  if (sector === 'financial') {
+    if (has('financial') || has('commercial')) return true;
+    if (onlyExclusive && !has('financial')) return false;
+    if (blockedForCommercial('government')) return false;
+    if (blockedForCommercial('healthcare')) return false;
+    if (blockedForCommercial('insurance')) return false;
+    return !has('government') || has('commercial') || has('financial');
+  }
+
+  if (sector === 'insurance') {
+    if (has('insurance') || has('commercial')) return true;
+    if (onlyExclusive && !has('insurance')) return false;
+    if (blockedForCommercial('government')) return false;
+    if (blockedForCommercial('financial')) return false;
+    if (blockedForCommercial('healthcare') && !has('insurance')) return false;
+    return !has('government') || has('commercial') || has('insurance');
+  }
+
   return false;
 }
 
@@ -216,8 +262,8 @@ function applyRoleProfileToRows(rows, roleProfile, includeOutOfScope) {
 function filterEvidenceMapForSector(evidenceMap, sector) {
   const profiles = evidenceMap.sector_profiles || evidenceMap.deployment_profiles || {};
   const key = sector;
-  if (!profiles[key] && !['commercial', 'government', 'healthcare'].includes(key)) {
-    throw new Error(`Unknown sector "${sector}". Use commercial, government, or healthcare.`);
+  if (!profiles[key] && !['commercial', 'government', 'healthcare', 'financial', 'insurance'].includes(key)) {
+    throw new Error(`Unknown sector "${sector}". Use commercial, government, healthcare, financial, or insurance.`);
   }
   const controls = (evidenceMap.controls || []).filter((c) => controlMatchesSector(c, sector));
   return { ...evidenceMap, controls, _activeSector: sector };
@@ -251,18 +297,56 @@ const SECTOR_INFER_KEYWORDS = {
     'medical bill',
     'health plan member',
   ],
+  financial: [
+    'fintech',
+    'mortgage',
+    'credit card',
+    'lending',
+    'banking',
+    'bank ',
+    'fcra',
+    'ecoa',
+    'adverse action',
+    'pci dss',
+    'glba',
+    'nydfs',
+    'cfpb',
+  ],
+  insurance: [
+    'naic',
+    'policyholder',
+    'underwriter',
+    'insurer',
+    'p&c',
+    'property casualty',
+    'claims adjust',
+    'insurance claim',
+    'premium',
+  ],
 };
 
 function inferSectorFromText(text) {
   const t = ` ${String(text || '').toLowerCase()} `;
-  let gov = 0;
-  let health = 0;
-  for (const k of SECTOR_INFER_KEYWORDS.government) if (t.includes(k)) gov++;
-  for (const k of SECTOR_INFER_KEYWORDS.healthcare) if (t.includes(k)) health++;
-  if (gov > 0 && gov > health) return { sector: 'government', govScore: gov, healthScore: health, confidence: gov >= 2 ? 'high' : 'medium' };
-  if (health > 0 && health >= gov) return { sector: 'healthcare', govScore: gov, healthScore: health, confidence: health >= 2 ? 'high' : 'medium' };
-  if (gov > 0 && health > 0 && gov === health) return { sector: 'commercial', govScore: gov, healthScore: health, confidence: 'low', ambiguous: true };
-  return { sector: 'commercial', govScore: gov, healthScore: health, confidence: gov || health ? 'low' : 'default' };
+  const scores = { government: 0, healthcare: 0, financial: 0, insurance: 0 };
+  for (const [name, keys] of Object.entries(SECTOR_INFER_KEYWORDS)) {
+    for (const k of keys) if (t.includes(k)) scores[name]++;
+  }
+  const ranked = Object.entries(scores)
+    .filter(([, n]) => n > 0)
+    .sort((a, b) => b[1] - a[1]);
+  if (ranked.length === 0) {
+    return { sector: 'commercial', ...scores, confidence: 'default' };
+  }
+  const [top, score] = ranked[0];
+  const tied = ranked.filter(([, n]) => n === score).map(([id]) => id);
+  if (tied.length > 1) {
+    return { sector: 'commercial', ...scores, confidence: 'low', ambiguous: true, tied };
+  }
+  return {
+    sector: top,
+    ...scores,
+    confidence: score >= 2 ? 'high' : 'medium',
+  };
 }
 
 function loadInferenceContext({ avaDesignPath, specPath, scorecardPath }) {
@@ -1147,7 +1231,7 @@ function renderHtml({
   const meta = scData.metadata || {};
   const summary = scData.summary || {};
   const generated = new Date().toISOString();
-  const docVersion = evidenceMap.source_document_version || '1.6 (November 2026)';
+  const docVersion = evidenceMap.source_document_version || '1.7 (November 2026)';
   const sectorKey = activeSector || 'commercial';
   const sectorProfile = (sectorProfiles || {})[sectorKey] || {
     label: sectorKey,
@@ -1160,9 +1244,15 @@ function renderHtml({
   } else if (sectorKey === 'healthcare') {
     sectorScopeNote =
       'Healthcare-only themes (HIPAA, CMS/MA, Section 1557, UR) are <strong>in scope</strong> alongside the commercial baseline.';
+  } else if (sectorKey === 'financial') {
+    sectorScopeNote =
+      'Financial-sector rows (PCI, ECOA/FCRA, GLBA/NYDFS) are <strong>in scope</strong> alongside the commercial baseline.';
+  } else if (sectorKey === 'insurance') {
+    sectorScopeNote =
+      'Insurance-sector rows (NAIC AI governance, UR, state insurer AI) are <strong>in scope</strong> alongside the commercial baseline.';
   } else {
     sectorScopeNote =
-      'FedRAMP/§3.10 government-only and healthcare-only control rows are <strong>out of scope</strong>. Use <span class="mono">--government</span> or <span class="mono">--healthcare</span> when applicable.';
+      'Government-, healthcare-, financial-, and insurance-only control rows are <strong>out of scope</strong>. Use <span class="mono">--government</span>, <span class="mono">--healthcare</span>, <span class="mono">--financial</span>, or <span class="mono">--insurance</span> when applicable.';
   }
   const mitCatalog = buildMitigationCatalog(rows);
   const exec = computeExecutiveStats(rows, summary);
@@ -1790,7 +1880,7 @@ async function main() {
     console.error(
       'Usage: node generate-compliance-report.js --scorecard <post-mitigation scorecard.json> [options]\n' +
         '  [--baseline-scorecard <prior scorecard.json>] [--mitigations <mitigations.json>]\n' +
-        '  [--sector commercial|government|healthcare] or --commercial | --government | --healthcare\n' +
+        '  [--sector commercial|government|healthcare|financial|insurance] or matching --<sector> flags\n' +
         '  [--market-vertical <id>]  commercial vertical → sector (+ optional ava-role); see data/ava-market-verticals.json\n' +
         '  [--deployment commercial|us-government]  (legacy alias for --sector)\n' +
         '  [--ava-design <design-artifact.json>]  Infer sector / market vertical when flags omitted\n' +
@@ -1990,10 +2080,14 @@ async function main() {
           avaComplianceChecker: 'sector_inference',
           needsUserSector: true,
           suggestedSector: inferred.sector,
-          govScore: inferred.govScore,
-          healthScore: inferred.healthScore,
+          sectorScores: {
+            government: inferred.government,
+            healthcare: inferred.healthcare,
+            financial: inferred.financial,
+            insurance: inferred.insurance,
+          },
           message:
-            'Sector was not set with --commercial | --government | --healthcare. Confirm sector with the user before sharing final compliance conclusions.',
+            'Sector was not set with --commercial | --government | --healthcare | --financial | --insurance. Confirm sector with the user before sharing final compliance conclusions.',
         })
       );
     } else if (!args.sectorExplicit) {

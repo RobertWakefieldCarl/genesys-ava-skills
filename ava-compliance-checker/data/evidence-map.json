@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.4",
+  "schema_version": "1.5",
   "source_bundled": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
-  "source_document_version": "1.6 (November 2026)",
-  "notes": "Controls may set sectors and evaluation_suites (functional, corner-security, empathy). Use --evaluation-suite and --ava-role to limit false positives (e.g. GoDaddy DBS). Keywords avoid bare stems like record/account/claim.",
+  "source_document_version": "1.7 (November 2026)",
+  "notes": "Controls may set sectors (commercial, government, healthcare, financial, insurance) and evaluation_suites. Use --financial or --insurance for sector-specific rows atop the commercial baseline.",
   "evaluation_suite_labels": {
     "functional": "Product / workflow eval — full commercial theme set",
     "corner-security": "Corner-case security suite — privacy, disclosure, injection, confidentiality",
@@ -12,7 +12,15 @@
   "sector_profiles": {
     "commercial": {
       "label": "Commercial / private sector",
-      "description": "Consumer, financial, PCI, telecom, and cross-cutting privacy laws. Excludes FedRAMP-only and healthcare-only control rows."
+      "description": "Cross-industry private sector — disclosure, privacy, security, accessibility, telecom. Excludes government-, healthcare-, financial-, and insurance-only rows."
+    },
+    "financial": {
+      "label": "Financial services / banking / payments",
+      "description": "Commercial baseline plus PCI, ECOA/FCRA, GLBA/NYDFS, CFPB fair-lending and safeguards themes (Part 1 §1.4; Part 3 §§3.1, 3.3)."
+    },
+    "insurance": {
+      "label": "Insurance (P&C and health payer)",
+      "description": "Commercial baseline plus NAIC AI governance, utilization review, state insurer AI and claims themes (Part 1 §1.2; Part 3 §3.3; Part 2 §2.6)."
     },
     "government": {
       "label": "US state & federal government",
@@ -173,6 +181,7 @@
     },
     {
       "id": "payments-pci-scope",
+      "sectors": ["financial", "commercial"],
       "evaluation_suites": ["functional", "corner-security"],
       "title": "Payment card data, PCI scope, DTMF, agent path",
       "keywords": [
@@ -224,6 +233,7 @@
     },
     {
       "id": "financial-fair-lending",
+      "sectors": ["financial"],
       "evaluation_suites": ["functional"],
       "title": "Consumer finance, adverse action, fair lending",
       "keywords": [
@@ -394,7 +404,39 @@
       ]
     },
     {
+      "id": "financial-banking-safeguards",
+      "sectors": ["financial"],
+      "evaluation_suites": ["functional", "corner-security"],
+      "title": "GLBA, NYDFS, and banking security for AI channels",
+      "keywords": [
+        "glba", "nydfs", "safeguards rule", "cfpb", "udaap", "reg e", "money transmit",
+        "wire transfer", "fraud alert", "aml", "bsa", "non-bank", "mfa", "vendor oversight"
+      ],
+      "document_sections": [
+        "Part 3 §3.3 financial institution AI",
+        "Part 3 §3.11.3 NYDFS Part 500",
+        "Part 1 §1.4 FTC Safeguards / GLBA"
+      ],
+      "regulatory_refs": [
+        "FTC Safeguards Rule (16 CFR Part 314) — WISP, MFA, vendor oversight for fintech and preparers (Part 3 §3.11.2).",
+        "NYDFS 23 NYCRR Part 500 — MFA, asset inventory including AI tools, 72-hour notice (Part 3 §3.11.4).",
+        "CFPB circulars on adverse action and explainability for AI credit decisions (Part 3 §3.3)."
+      ],
+      "case_law_refs": [],
+      "remediation": [
+        "List conversational AI, transcription, and model vendors in the WISP and NYDFS asset inventory.",
+        "Enforce MFA on admin and transcript access; block consumer financial data from public model endpoints.",
+        "Document third-party AI oversight and incident paths (72-hour / 30-day) in runbooks."
+      ],
+      "possible_fines": [
+        "NYDFS Part 500: civil penalties per violation; recent consent orders include multi-million-dollar amounts (Part 3 §3.11.4).",
+        "FTC Safeguards Rule: civil penalties where violations overlap FTC penalty statutes (Part 3 §3.11.2).",
+        "GLBA / Regulation P privacy failures: regulatory orders and customer redress (Part 1 §1.4)."
+      ]
+    },
+    {
       "id": "insurance-naic",
+      "sectors": ["insurance", "healthcare"],
       "evaluation_suites": ["functional"],
       "title": "Insurance AI governance",
       "keywords": [
