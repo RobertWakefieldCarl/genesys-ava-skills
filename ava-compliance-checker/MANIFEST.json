@@ -1,11 +1,11 @@
 {
   "name": "ava-compliance-checker",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "bundledReferenceDocument": {
     "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
-    "sha256": "ee4d073d8730a5e91cd19753330a3ede3529eebc519ebde0abb6c75f6bbd6e84",
-    "note": "Sole legal/compliance corpus; v1.7 November 2026 (LatAm/APAC, §2.12–2.16; prior §3.12–3.13 OWASP/ADA)."
+    "sha256": "f44c03eb94b84d4ecdee1b762519939f01f4b99f7cc7a7b7fe926540cbd19113",
+    "note": "Sole legal/compliance corpus; v1.8 November 2026 (§1.11 messaging, §2.17, §3.14 catalog mapping)."
   },
   "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector profiles including financial and insurance; compliance artifacts under axl-sessions/AXL-*/compliance/.",
   "author": "Stern (custom)",
@@ -38,6 +38,7 @@
     "references/customer-documentation-scope.md",
     "references/market-vertical-selection.md",
     "references/skill-overview.md",
+    "references/skill-overview.html",
     "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "scripts/generate-compliance-report.js",
     "scripts/package.ps1"

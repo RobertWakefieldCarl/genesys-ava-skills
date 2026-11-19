@@ -8,7 +8,7 @@ description: >-
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.7.0
+  version: 1.8.0
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -18,7 +18,7 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 `<SkillDir>/assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`
 
-(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.7 November 2026** — expanded US states, LatAm/APAC, §§2.12–2.16 enforcement; v1.6 §3.12 OWASP, §3.13 ADA; v1.5 §3.11 IRS 1075).
+(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.8 November 2026** — §1.11 worldwide AI SMS/email, §2.17 cases, §3.14 messaging controls; prior v1.7 LatAm/APAC, §§2.12–2.16; v1.6 OWASP/ADA; v1.5 IRS 1075).
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 
@@ -215,8 +215,8 @@ Edit **`data/evidence-map.json`**: keywords, `sectors`, `possible_fines`, citati
 
 | Path | Role |
 |------|------|
-| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.7) |
-| `references/skill-overview.md` | Coverage, workflow, and CLI switch reference |
+| `assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md` | Sole legal/compatibility source (v1.8) |
+| `references/skill-overview.md` / `.html` | Coverage, workflow, and CLI switch reference (HTML for facilitators) |
 | `data/ava-market-verticals.json` | Vertical → sector + optional `ava-role` |
 | `data/evidence-map.json` | Keyword → control → remediation |
 | `references/market-vertical-selection.md` | Facilitator cheat sheet for Phase 0 |

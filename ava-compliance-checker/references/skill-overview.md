@@ -8,14 +8,14 @@ The generator:
 
 1. Loads scenario pass/fail text from the scorecard.
 2. Matches keywords and failure patterns to **control themes** in `data/evidence-map.json`.
-3. Cites **only** the bundled research compendium (`assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`, currently **v1.7**).
+3. Cites **only** the bundled research compendium (`assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`, currently **v1.8**).
 4. Writes artifacts under `axl-sessions/AXL-<customer>/compliance/<run-id>/` (scorecard snapshot, MD copy, `compliance-run.json`, reports).
 
 **Not legal advice.** Reports include a Genesys disclaimer; counsel must confirm applicability.
 
 ## What it covers
 
-The compendium spans **US federal, state, and local law**, **EU/UK/worldwide** entries (v1.7 adds Latin America, Caribbean, and Asia-Pacific depth), **court cases and enforcement** (including v1.7 §§2.12–2.16), and **organizational standards** (PCI, HIPAA, FedRAMP, OWASP §3.12, ADA §3.13, IRS 1075 §3.11, etc.).
+The compendium spans **US federal, state, and local law**, **EU/UK/worldwide** entries, **AI SMS/email worldwide (v1.8 §1.11)**, **court cases** (§§2.12–2.17), and **organizational standards** (PCI, HIPAA, FedRAMP, OWASP §3.12, ADA §3.13, messaging §3.14, IRS 1075 §3.11, etc.).
 
 The evidence map groups scorecard signals into themes such as:
 
@@ -32,7 +32,7 @@ The evidence map groups scorecard signals into themes such as:
 | FedRAMP / OMB / CJIS / IRS | **government sector** |
 | OWASP LLM + Agentic 2026 | Part 3 §3.12 |
 | ADA / WCAG | Part 3 §3.13 |
-| TCPA / outbound | Part 1 §1.4 |
+| SMS / email / TCPA (`telecom-tcpa-messaging`) | Part 1 §1.11, §3.14, §1.4 |
 | Accessibility, GDPR, minors, employment, content provenance | Cross-sector (commercial baseline) |
 
 **Sector profiles** narrow which control **rows** are active (see switches below).
