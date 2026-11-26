@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "notes": "Geographic scope for compliance reports. Agents should AskQuestion (multi-select) when needsUserRegions is true. CLI: --regions us,emea or --all-regions.",
+  "universal_control_tag": "universal",
+  "default_selection": ["all"],
+  "region_order": ["us", "north-america", "latam", "emea", "apac", "all"],
+  "regions": {
+    "us": {
+      "label": "United States",
+      "description": "US federal, state, and local law and US cases.",
+      "match_tags": ["us"]
+    },
+    "north-america": {
+      "label": "North America",
+      "description": "US plus Canada and Mexico (CASL, provincial privacy, Mexico LFPDPPP, etc.).",
+      "match_tags": ["us", "canada", "mexico", "north-america"]
+    },
+    "latam": {
+      "label": "Latin America & Caribbean",
+      "description": "Brazil, Colombia, Argentina, Chile, and other LatAm/Caribbean regimes in Part 1.10.8.",
+      "match_tags": ["latam", "brazil", "colombia", "mexico", "chile", "argentina"]
+    },
+    "emea": {
+      "label": "EMEA",
+      "description": "EU, UK, EEA, and Middle East/Africa entries in the compendium.",
+      "match_tags": ["emea", "eu", "uk", "gdpr", "mena"]
+    },
+    "apac": {
+      "label": "Asia-Pacific",
+      "description": "Australia, Singapore, Japan, Korea, India, and other APAC rows (Part 1.10.9).",
+      "match_tags": ["apac", "australia", "singapore", "japan", "korea", "india", "china"]
+    },
+    "all": {
+      "label": "All regions",
+      "description": "No geographic filter — full worldwide compendium themes in evidence-map.",
+      "match_tags": ["all"]
+    }
+  }
+}

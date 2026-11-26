@@ -1,8 +1,8 @@
 # ava-compliance-checker
 
-**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.8.0).
+**Monorepo copy:** [genesys-ava-skills/ava-compliance-checker](https://github.com/RobertWakefieldCarl/genesys-ava-skills/tree/main/ava-compliance-checker) (v1.11.0).
 
-Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.8) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer). See **`references/skill-overview.html`** (or `.md`) for full coverage and switches.
+Maps **AVA `scorecard.json`** results to themes from **one** bundled document — *AI and Virtual Agent Laws, Court Cases and Compliance Standards* (v1.11) — and writes **compliance-report.html** (+ **.pdf** with Puppeteer). See **`references/skill-overview.html`** (or `.md`) for full coverage and switches.
 
 **Disclaimer:** Genesys does not provide legal or compliance advice. Reports surface possible AVA-related themes for discussion only; customers must rely on their own qualified counsel for applicability and obligations.
 
@@ -21,6 +21,8 @@ Compliance artifacts default to **`axl-sessions/AXL-<customer>/compliance/<run-i
 **Market vertical** (recommended first): `--market-vertical <id>` from `data/ava-market-verticals.json` — sets sector and optional `--ava-role`. If inference is weak, the agent should ask the customer for vertical before legal conclusions.
 
 **Sector profiles:** `--commercial` (default), `--government`, `--healthcare`, `--financial`, `--insurance` — or `--sector <name>`. Legacy: `--deployment us-government` → government.
+
+**Geographic scope:** `--regions us,emea` or `--all-regions`. Agent should ask (multi-select) when `needsUserRegions` is printed — see `references/geographic-scope.md`.
 
 **Verification (after fixes + retest):** `--baseline-scorecard`, optional `--mitigations` → `compliance-verification-report.html`.
 

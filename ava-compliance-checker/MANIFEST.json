@@ -1,13 +1,13 @@
 {
   "name": "ava-compliance-checker",
-  "version": "1.8.0",
+  "version": "1.11.0",
   "bundledReferenceDocument": {
     "path": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
     "title": "AI and Virtual Agent Laws, Court Cases and Compliance Standards",
-    "sha256": "f44c03eb94b84d4ecdee1b762519939f01f4b99f7cc7a7b7fe926540cbd19113",
-    "note": "Sole legal/compliance corpus; v1.8 November 2026 (§1.11 messaging, §2.17, §3.14 catalog mapping)."
+    "sha256": "76c4dd31d7e93df0599fd1f7f7d6038c7d6b3486b83b141ddd873c2f309a8a28",
+    "note": "Sole legal/compliance corpus; v1.11 November 2026 (§1.12, §§3.15–3.20, catalog 1.1)."
   },
-  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector profiles including financial and insurance; compliance artifacts under axl-sessions/AXL-*/compliance/.",
+  "description": "Map ava-evaluate scorecards to bundled law/case/standards themes; sector and multi-region geographic scope; compliance artifacts under axl-sessions/AXL-*/compliance/.",
   "author": "Stern (custom)",
   "license": "Internal redistribution; not an official Genesys release.",
   "requires": {
@@ -33,10 +33,12 @@
     "install.sh",
     "examples/mitigations.example.json",
     "data/evidence-map.json",
+    "data/compliance-regions.json",
     "data/ava-role-profiles.json",
     "data/ava-market-verticals.json",
     "references/customer-documentation-scope.md",
     "references/market-vertical-selection.md",
+    "references/geographic-scope.md",
     "references/skill-overview.md",
     "references/skill-overview.html",
     "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",

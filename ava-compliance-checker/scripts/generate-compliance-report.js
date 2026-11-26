@@ -50,6 +50,9 @@ function parseArgs() {
     avaRole: null,
     includeOutOfScopeThemes: false,
     roleProfiles: null,
+    regions: null,
+    regionsExplicit: false,
+    allRegions: false,
     pdf: true,
   };
   for (let i = 0; i < argv.length; i++) {
@@ -97,7 +100,21 @@ function parseArgs() {
     else if (argv[i] === '--ava-role' && argv[i + 1]) out.avaRole = argv[++i].toLowerCase();
     else if (argv[i] === '--role-profiles' && argv[i + 1]) out.roleProfiles = path.resolve(argv[++i]);
     else if (argv[i] === '--include-out-of-scope-themes') out.includeOutOfScopeThemes = true;
-    else if (argv[i] === '--no-pdf') out.pdf = false;
+    else if (argv[i] === '--all-regions') {
+      out.allRegions = true;
+      out.regionsExplicit = true;
+      out.regions = ['all'];
+    } else if (argv[i] === '--regions' && argv[i + 1]) {
+      out.regions = String(argv[++i])
+        .split(/[,;]+/)
+        .map((s) => s.trim().toLowerCase())
+        .filter(Boolean);
+      out.regionsExplicit = true;
+    } else if (argv[i] === '--region' && argv[i + 1]) {
+      if (!out.regions) out.regions = [];
+      out.regions.push(String(argv[++i]).toLowerCase().trim());
+      out.regionsExplicit = true;
+    } else if (argv[i] === '--no-pdf') out.pdf = false;
   }
   return out;
 }
@@ -267,6 +284,74 @@ function filterEvidenceMapForSector(evidenceMap, sector) {
   }
   const controls = (evidenceMap.controls || []).filter((c) => controlMatchesSector(c, sector));
   return { ...evidenceMap, controls, _activeSector: sector };
+}
+
+function loadComplianceRegions(customPath) {
+  const p = customPath || path.join(path.resolve(__dirname, '..'), 'data', 'compliance-regions.json');
+  if (!fs.existsSync(p)) return null;
+  try {
+    return loadJson(p);
+  } catch {
+    return null;
+  }
+}
+
+function normalizeRegionIds(ids) {
+  const aliases = { latam: 'latam', 'latin-america': 'latam', 'na': 'north-america', 'north_america': 'north-america' };
+  return (ids || []).map((id) => aliases[id] || String(id).toLowerCase().trim()).filter(Boolean);
+}
+
+function expandRegionSelection(selectedIds, regionsDoc) {
+  const ids = normalizeRegionIds(selectedIds);
+  if (ids.length === 0 || ids.includes('all')) return null;
+  const defs = regionsDoc?.regions || {};
+  const expanded = new Set();
+  for (const id of ids) {
+    const def = defs[id];
+    const tags = def?.match_tags || [id];
+    for (const t of tags) expanded.add(t);
+  }
+  return expanded;
+}
+
+function controlRegionTags(c, universalTag) {
+  const u = universalTag || 'universal';
+  if (c.regions && c.regions.length) return c.regions;
+  return [u];
+}
+
+function controlMatchesRegions(c, expandedSet, universalTag) {
+  if (!expandedSet) return true;
+  const tags = controlRegionTags(c, universalTag);
+  if (tags.includes('universal') || tags.includes('all')) return true;
+  return tags.some((t) => expandedSet.has(t));
+}
+
+function filterEvidenceMapForRegions(evidenceMap, expandedSet, selectedLabels, universalTag) {
+  if (!expandedSet) {
+    return {
+      ...evidenceMap,
+      _activeRegions: selectedLabels || ['All regions'],
+      _regionFilter: false,
+    };
+  }
+  const controls = (evidenceMap.controls || []).filter((c) =>
+    controlMatchesRegions(c, expandedSet, universalTag)
+  );
+  return {
+    ...evidenceMap,
+    controls,
+    _activeRegions: selectedLabels || [],
+    _regionFilter: true,
+  };
+}
+
+function resolveRegionLabels(selectedIds, evidenceMap, regionsDoc) {
+  const ids = normalizeRegionIds(selectedIds);
+  if (ids.includes('all') || ids.length === 0) return ['All regions'];
+  const profiles = evidenceMap?.region_profiles || {};
+  const defs = regionsDoc?.regions || {};
+  return ids.map((id) => profiles[id]?.label || defs[id]?.label || id);
 }
 
 const SECTOR_INFER_KEYWORDS = {
@@ -617,6 +702,7 @@ function persistComplianceArtifacts({
   reportKind,
   activeSector,
   activeMarketVertical,
+  activeRegions,
   scData,
 }) {
   const copies = [];
@@ -663,6 +749,7 @@ function persistComplianceArtifacts({
     sector: activeSector,
     marketVertical: activeMarketVertical?.id || null,
     marketVerticalLabel: activeMarketVertical?.label || null,
+    geographicRegions: activeRegions || null,
     runId: scData?.run_id || null,
     agentId: scData?.agentId || null,
     version: scData?.version || null,
@@ -1225,13 +1312,15 @@ function renderHtml({
   deferredThemes,
   suiteLabels,
   activeMarketVertical,
+  activeRegionsLabels,
+  regionScopeNote,
 }) {
   const isVerification = !!verificationMode;
   const isMitigationOutcome = !!mitigationOutcomeMode;
   const meta = scData.metadata || {};
   const summary = scData.summary || {};
   const generated = new Date().toISOString();
-  const docVersion = evidenceMap.source_document_version || '1.8 (November 2026)';
+  const docVersion = evidenceMap.source_document_version || '1.11 (November 2026)';
   const sectorKey = activeSector || 'commercial';
   const sectorProfile = (sectorProfiles || {})[sectorKey] || {
     label: sectorKey,
@@ -1273,6 +1362,8 @@ function renderHtml({
         activeMarketVertical.label
       )}</span>`
     : '';
+  const regionsLabel = (activeRegionsLabels || []).join(', ') || 'All regions';
+  const regionBadge = `<span class="pill pill-vertical hero-pill" title="Geographic scope">${escapeHtml(regionsLabel)}</span>`;
   const docSub = isMitigationOutcome
     ? 'Post-mitigation retest after AVA version update; recorded fixes, baseline comparison, and residual themes.'
     : isVerification
@@ -1729,7 +1820,7 @@ function renderHtml({
 
   <header class="doc-header hero">
     <h1 class="doc-title">${escapeHtml(docTitle)}</h1>
-    <p class="doc-sub">${escapeHtml(docSub)} ${customerBadge}${verticalBadge}</p>
+    <p class="doc-sub">${escapeHtml(docSub)} ${customerBadge}${verticalBadge}${regionBadge}</p>
     ${axlOutputDir ? `<p class="doc-sub" style="font-size:0.82rem;opacity:0.85">Saved for customer: <span class="mono">${escapeHtml(displayPath(axlOutputDir))}</span></p>` : ''}
   </header>
 
@@ -1776,6 +1867,13 @@ function renderHtml({
         ? `<p class="muted"><strong>Market vertical:</strong> ${escapeHtml(activeMarketVertical.label)} (<span class="mono">${escapeHtml(
             activeMarketVertical.id || ''
           )}</span>) — ${escapeHtml(activeMarketVertical.description || '')}</p>`
+        : ''
+    }
+    ${
+      activeRegionsLabels && activeRegionsLabels.length
+        ? `<p class="muted"><strong>Geographic scope:</strong> ${escapeHtml(
+            activeRegionsLabels.join(', ')
+          )} — ${escapeHtml(regionScopeNote || '')}</p>`
         : ''
     }
     <p class="muted"><strong>Sector profile:</strong> ${escapeHtml(sectorProfile.label || sectorKey)} — ${escapeHtml(
@@ -1888,6 +1986,7 @@ async function main() {
         '  [--evaluation-suite functional|corner-security|empathy|all]  Filter theme map (auto-detect from test IDs)\n' +
         '  [--ava-role godaddy-dbs]  Suppress themes not pertaining to role (see data/ava-role-profiles.json)\n' +
         '  [--include-out-of-scope-themes]  Keep role-deferred themes in scenario cards and catalog\n' +
+        '  [--regions us,north-america,latam,emea,apac]  Geographic scope (multi); or --region <id> repeated; --all-regions\n' +
         '  [--session-dir axl-sessions/AXL-<customer>] [--lifecycle-dir .ava-lifecycle/<slug>]\n' +
         '  [--customer AXL-name] [--axl-sessions-root <dir>] [--spec spec-artifact.md] [--test-cases-dir <dir>]\n' +
         '  [--out-dir <dir>] [--output-html <filename>] [--evidence-map <path>] [--themes-from all|failures] [--no-pdf]\n' +
@@ -2129,6 +2228,63 @@ async function main() {
     })
   );
 
+  const regionsDoc = loadComplianceRegions();
+  let selectedRegionIds = args.regions ? normalizeRegionIds(args.regions) : null;
+  if (!args.regionsExplicit) {
+    selectedRegionIds = ['all'];
+    if (regionsDoc) {
+      console.log(
+        JSON.stringify({
+          avaComplianceChecker: 'geographic_scope',
+          needsUserRegions: true,
+          regionOptions: (regionsDoc.region_order || Object.keys(regionsDoc.regions || {})).map((id) => ({
+            id,
+            label: regionsDoc.regions?.[id]?.label || id,
+            allowMultiple: true,
+          })),
+          message:
+            'Geographic scope was not set. Ask the facilitator which jurisdiction(s) apply: US, North America, LATAM, EMEA, APAC, or All (multiple choice). Re-run with --regions us,emea or --all-regions.',
+        })
+      );
+    }
+  } else if (args.allRegions || selectedRegionIds?.includes('all')) {
+    selectedRegionIds = ['all'];
+  }
+  if (args.regionsExplicit && selectedRegionIds && !selectedRegionIds.includes('all') && regionsDoc) {
+    for (const id of selectedRegionIds) {
+      if (!regionsDoc.regions?.[id]) {
+        console.error(
+          `Unknown region "${id}". Use us, north-america, latam, emea, apac, or all (--all-regions).`
+        );
+        process.exit(1);
+      }
+    }
+  }
+  const expandedRegionTags =
+    selectedRegionIds && !selectedRegionIds.includes('all')
+      ? expandRegionSelection(selectedRegionIds, regionsDoc)
+      : null;
+  const activeRegionsLabels = resolveRegionLabels(selectedRegionIds || ['all'], evidenceMapRaw, regionsDoc);
+  const regionScopeNote = expandedRegionTags
+    ? 'Evidence-map themes are filtered to this geographic scope (universal security/disclosure rows remain). Confirm local law with counsel.'
+    : 'Worldwide theme set from the evidence map (no geographic filter). Confirm footprint with counsel.';
+  evidenceMap = filterEvidenceMapForRegions(
+    evidenceMap,
+    expandedRegionTags,
+    activeRegionsLabels,
+    regionsDoc?.universal_control_tag
+  );
+  if (args.regionsExplicit && selectedRegionIds) {
+    console.log(
+      JSON.stringify({
+        avaComplianceChecker: 'geographic_scope',
+        activeRegions: selectedRegionIds,
+        labels: activeRegionsLabels,
+        filtered: !!expandedRegionTags,
+      })
+    );
+  }
+
   const sessionContext = loadSessionContext(specPath);
 
   const sourceMd = path.join(skillDir, 'assets', 'AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md');
@@ -2204,6 +2360,8 @@ async function main() {
     deferredThemes: deferredThemes || [],
     suiteLabels: evidenceMapRaw.evaluation_suite_labels || {},
     activeMarketVertical: activeMarketVertical || null,
+    activeRegionsLabels: evidenceMap._activeRegions || activeRegionsLabels,
+    regionScopeNote,
   });
 
   let outHtmlName = args.outputHtml;
@@ -2250,6 +2408,7 @@ async function main() {
     reportKind,
     activeSector,
     activeMarketVertical: activeMarketVertical || null,
+    activeRegions: selectedRegionIds || ['all'],
     scData,
   });
   console.log('Wrote artifact manifest:', manifestPath);

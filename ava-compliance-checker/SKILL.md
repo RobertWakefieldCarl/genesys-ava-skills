@@ -8,7 +8,7 @@ description: >-
   Does not replace ava-corner-cases.
 disable-model-invocation: true
 metadata:
-  version: 1.8.0
+  version: 1.11.0
   reference_document: assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md
 ---
 
@@ -18,7 +18,7 @@ Turn **AVA evaluation output** (`scorecard.json` from **[ava-evaluate](../ava-ev
 
 `<SkillDir>/assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md`
 
-(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.8 November 2026** — §1.11 worldwide AI SMS/email, §2.17 cases, §3.14 messaging controls; prior v1.7 LatAm/APAC, §§2.12–2.16; v1.6 OWASP/ADA; v1.5 IRS 1075).
+(*AI and Virtual Agent Laws, Court Cases and Compliance Standards*, **v1.11 November 2026** — Genesys on-ramp §1.12, standards §§3.15–3.20, catalog 1.1; prior v1.8 messaging §§1.11/3.14; v1.7 worldwide depth; v1.6 OWASP/ADA).
 
 Mapping uses **`<SkillDir>/data/evidence-map.json`** (Parts 1–3). Do not import external compliance corpora unless the user replaces the bundled MD.
 
@@ -94,6 +94,27 @@ Full switch reference: **`references/skill-overview.md`**.
 
 The generator prints `avaComplianceChecker: sector_inference` when it needs user confirmation.
 
+### Phase 0c — Geographic scope (US | North America | LATAM | EMEA | APAC | All)
+
+**Which jurisdictions matter for this AVA deployment?** Filter law themes before sharing conclusions with the customer.
+
+1. If **`--regions`** / **`--all-regions`** was not passed, the generator prints **`needsUserRegions: true`**.
+2. Use **AskQuestion** with **multiple selection** (or ask on a call):
+
+   > “Which geographic scope should we use — **US**, **North America**, **LATAM**, **EMEA**, **APAC**, or **All**? Select all that apply.”
+
+   See **`references/geographic-scope.md`**.
+
+3. Re-run with e.g. **`--regions us,emea`** or **`--all-regions`**.
+
+| Flag | Purpose |
+|------|---------|
+| **`--regions us,latam,emea`** | Comma-separated region IDs (multi) |
+| **`--region emea`** | Repeatable single region |
+| **`--all-regions`** | No geographic filter on evidence-map rows |
+
+Stdout: `avaComplianceChecker: geographic_scope`.
+
 ### Evaluation suite and AVA role (false-positive control)
 
 Corner-case and empathy scorecards often contain words that **do not** mean the AVA is a lender, insurer, or hiring tool (e.g. brokerage **claim**, Salesforce **record**, **account**).
@@ -124,7 +145,7 @@ Reports add **§ AVA scope and evaluation context** listing deferred themes and 
 1. Resolve `<SkillDir>` and the AVA **`.ava-lifecycle/<slug>/`** (from the scorecard path or `--lifecycle-dir`).
 2. Resolve the AXL workshop folder **`axl-sessions/AXL-<customer>/`** (`--session-dir`, `--customer`, path inference, or **agent_id** search across session folders).
 3. Locate the user's `scorecard.json` (usually under `.ava-lifecycle/<slug>/eval-runs/...`).
-4. Resolve market vertical (Phase 0) and sector (Phase 0b).
+4. Resolve market vertical (Phase 0), sector (Phase 0b), and geographic scope (Phase 0c).
 5. **Default artifact root (required for AXL AVAs):** store everything under the session folder, not the lifecycle tree:
 
    | Artifact | Path |
@@ -200,7 +221,7 @@ Deliver HTML/PDF: **Mitigations applied**, **Before / after**, retest details, *
 
 | Section | Content |
 |--------|---------|
-| Executive summary | Pass/fail/review, themes, **market vertical**, **sector profile**, unmapped count |
+| Executive summary | Pass/fail/review, themes, **geographic scope**, **market vertical**, **sector profile**, unmapped count |
 | What was tested and why | Spec + test-case purpose when available |
 | Mitigations applied | From `--mitigations` JSON *(verification / outcome)* |
 | Before / after | Baseline vs retest per `testCaseId` |

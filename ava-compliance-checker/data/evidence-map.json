@@ -1,8 +1,8 @@
 {
-  "schema_version": "1.6",
+  "schema_version": "1.7",
   "source_bundled": "assets/AI_and_Virtual_Agent_Laws_Cases_and_Compliance_Standards.md",
-  "source_document_version": "1.8 (November 2026)",
-  "notes": "Controls may set sectors (commercial, government, healthcare, financial, insurance) and evaluation_suites. Use --financial or --insurance for sector-specific rows atop the commercial baseline.",
+  "source_document_version": "1.11 (November 2026)",
+  "notes": "Controls use sectors and regions. Use --regions for geographic scope (multi); universal rows always apply.",
   "evaluation_suite_labels": {
     "functional": "Product / workflow eval — full commercial theme set",
     "corner-security": "Corner-case security suite — privacy, disclosure, injection, confidentiality",
@@ -34,13 +34,32 @@
   "controls": [
     {
       "id": "transparency-disclosure",
-      "evaluation_suites": ["functional", "corner-security", "empathy"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security",
+        "empathy"
+      ],
       "title": "Transparency: AI identity, bot disclosure, non-impersonation",
       "keywords": [
-        "disclose", "disclosure", "bot", "artificial", "not human", "human agent",
-        "companion", "impersonat", "pretend", "person", "staff", "representative"
+        "disclose",
+        "disclosure",
+        "bot",
+        "artificial",
+        "not human",
+        "human agent",
+        "companion",
+        "impersonat",
+        "pretend",
+        "person",
+        "staff",
+        "representative"
       ],
-      "document_sections": ["Part 1 §§1.2 (BOT Act, chatbot laws)", "Part 1 §1.5 AI Act Art. 50", "Part 1 §1.7 PECR / DMCC", "Part 3 §3.8 crosswalk row: Transparency"],
+      "document_sections": [
+        "Part 1 §§1.2 (BOT Act, chatbot laws)",
+        "Part 1 §1.5 AI Act Art. 50",
+        "Part 1 §1.7 PECR / DMCC",
+        "Part 3 §3.8 crosswalk row: Transparency"
+      ],
       "regulatory_refs": [
         "California BOT Act (Bus. & Prof. Code 17940+); state chatbot safety laws (e.g. Utah, Texas TRAIGA disclosures).",
         "EU AI Act transparency and prohibited manipulative practices (Part 1 §1.5).",
@@ -62,17 +81,37 @@
         "EU AI Act Article 50 transparency obligations: up to EUR 15 million or 3% of worldwide annual turnover (Part 1 §1.5 penalties).",
         "UK DMCC / CMA consumer enforcement: up to 10% of global turnover (Part 1 §1.7 penalties).",
         "FTC Act §5: civil penalties and disgorgement (amounts case-specific; Part 1 §1.4)."
+      ],
+      "regions": [
+        "universal"
       ]
     },
     {
       "id": "accuracy-no-fabrication",
-      "evaluation_suites": ["functional", "corner-security", "empathy"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security",
+        "empathy"
+      ],
       "title": "Accuracy, grounding, and no fabricated facts",
       "keywords": [
-        "invent", "fabricat", "hallucin", "false", "incorrect", "policy", "unverified",
-        "assert", "claim", "ground", "source", "unknown"
+        "invent",
+        "fabricat",
+        "hallucin",
+        "false",
+        "incorrect",
+        "policy",
+        "unverified",
+        "assert",
+        "claim",
+        "ground",
+        "source",
+        "unknown"
       ],
-      "document_sections": ["Part 2 §§2.1, 2.9", "Part 3 §3.8 Testing and red teaming"],
+      "document_sections": [
+        "Part 2 §§2.1, 2.9",
+        "Part 3 §3.8 Testing and red teaming"
+      ],
       "regulatory_refs": [
         "FTC Act §5 — unsubstantiated or misleading representations (Part 1 §1.4).",
         "EU consumer law — misleading practices (Part 1 §1.5 Consumer law row)."
@@ -91,17 +130,34 @@
         "UK Digital Markets, Competition and Consumers Act 2024: consumer-law fines up to 10% of global turnover (Part 1 §1.7).",
         "EU consumer-law coordinated enforcement: at least 4% of turnover in affected member states or EUR 2 million (Part 1 §1.5).",
         "State comprehensive privacy / ADMT regimes: commonly up to USD 7,500 per violation (varies; Part 1 §1.3)."
+      ],
+      "regions": [
+        "universal"
       ]
     },
     {
       "id": "minors-safety",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Minors, companion features, self-harm safeguards",
       "keywords": [
-        "minor", "child", "children", "teen", "self-harm", "suicide", "crisis",
-        "companion", "unsafe", "underage"
+        "minor",
+        "child",
+        "children",
+        "teen",
+        "self-harm",
+        "suicide",
+        "crisis",
+        "companion",
+        "unsafe",
+        "underage"
       ],
-      "document_sections": ["Part 1 §§1.2 CA SB 243, NY S9051-B, WA HB 2225", "Part 2 §2.2"],
+      "document_sections": [
+        "Part 1 §§1.2 CA SB 243, NY S9051-B, WA HB 2225",
+        "Part 2 §2.2"
+      ],
       "regulatory_refs": [
         "COPPA and amended Rule — child-directed agents (Part 1 §1.4).",
         "NY S9051-B companion features for minors; WA HB 2225 (Part 1 §1.2)."
@@ -120,17 +176,39 @@
         "Texas TRAIGA: USD 80,000 to USD 200,000 per uncurable violation; USD 2,000 to USD 40,000 per day continuing (Part 1 §1.2).",
         "Washington HB 2225: Consumer Protection Act treble damages capped at USD 25,000 plus AG civil penalties (Part 1 §1.2).",
         "COPPA amended Rule: FTC civil penalties up to USD 53,088 per violation (Part 1 §1.4; verify inflation)."
+      ],
+      "regions": [
+        "us",
+        "emea",
+        "apac",
+        "north-america"
       ]
     },
     {
       "id": "recording-consent-privacy",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Recording, wiretap, session analytics, and consent",
       "keywords": [
-        "recording", "recorded call", "call recording", "consent to record", "cipa", "wiretap",
-        "eavesdrop", "transcript retention", "session replay", "analytics on calls"
+        "recording",
+        "recorded call",
+        "call recording",
+        "consent to record",
+        "cipa",
+        "wiretap",
+        "eavesdrop",
+        "transcript retention",
+        "session replay",
+        "analytics on calls"
       ],
-      "document_sections": ["Part 1 §§1.2 CIPA, 1.3 all-party consent", "Part 1 §1.4 TCPA/STIR", "Part 2 §2.3"],
+      "document_sections": [
+        "Part 1 §§1.2 CIPA, 1.3 all-party consent",
+        "Part 1 §1.4 TCPA/STIR",
+        "Part 2 §2.3",
+        "Part 3 §3.15 Call recording consent by state and country"
+      ],
       "regulatory_refs": [
         "State all-party consent (e.g. California CIPA) and comprehensive privacy opt-outs (Part 1 §§1.2–1.3).",
         "ePrivacy / PECR marketing and recording rules (Part 1 §§1.5, 1.7)."
@@ -148,17 +226,39 @@
         "California CCPA/CPRA: USD 2,663 per violation; USD 7,988 intentional or under-16 (Part 1 §1.2 penalties).",
         "UK PECR (as amended): up to GBP 17.5 million or 4% of worldwide turnover (Part 1 §1.7).",
         "Comprehensive state privacy laws: commonly up to USD 7,500 per violation (Part 1 §1.3)."
+      ],
+      "regions": [
+        "us",
+        "canada",
+        "emea",
+        "apac",
+        "latam"
       ]
     },
     {
       "id": "biometrics-voice-likeness",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Biometrics, voiceprints, face, voice cloning, publicity",
       "keywords": [
-        "biometric", "voiceprint", "face", "facial", "likeness", "clone", "voice actor",
-        "bipa", "cubi", "photo", "camera"
+        "biometric",
+        "voiceprint",
+        "face",
+        "facial",
+        "likeness",
+        "clone",
+        "voice actor",
+        "bipa",
+        "cubi",
+        "photo",
+        "camera"
       ],
-      "document_sections": ["Part 1 §§1.2 BIPA/CUBI, 1.3 biometrics", "Part 2 §2.3, 2.8"],
+      "document_sections": [
+        "Part 1 §§1.2 BIPA/CUBI, 1.3 biometrics",
+        "Part 2 §2.3, 2.8"
+      ],
       "regulatory_refs": [
         "Illinois BIPA; Texas CUBI; Washington biometrics (Part 1 §§1.2–1.3).",
         "EU AI Act prohibited/restricted practices and marking (Part 1 §1.5)."
@@ -177,18 +277,41 @@
         "Texas CUBI: up to USD 25,000 per violation (background; verify; Part 1 §1.2).",
         "EU AI Act prohibited practices (e.g. unauthorized biometric categorization): up to EUR 35 million or 7% of worldwide turnover (Part 1 §1.5).",
         "NYC biometric identifier law: private damages reported USD 500, or USD 5,000 for intentional sale (Part 1 §1.1)."
+      ],
+      "regions": [
+        "us",
+        "emea",
+        "apac"
       ]
     },
     {
       "id": "payments-pci-scope",
-      "sectors": ["financial", "commercial"],
-      "evaluation_suites": ["functional", "corner-security"],
+      "sectors": [
+        "financial",
+        "commercial"
+      ],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Payment card data, PCI scope, DTMF, agent path",
       "keywords": [
-        "card", "pan", "cvv", "cvc", "pci", "payment", "dtmf", "charge", "credit card",
-        "debit", "cardholder"
+        "card",
+        "pan",
+        "cvv",
+        "cvc",
+        "pci",
+        "payment",
+        "dtmf",
+        "charge",
+        "credit card",
+        "debit",
+        "cardholder"
       ],
-      "document_sections": ["Part 3 §3.1 PCI DSS", "Part 3 §3.8 crosswalk row: regulated data"],
+      "document_sections": [
+        "Part 3 §3.1 PCI DSS",
+        "Part 3 §3.8 crosswalk row: regulated data"
+      ],
       "regulatory_refs": [
         "PCI DSS v4.x — scope, masking, logging, third parties (Part 3 §3.1).",
         "PCI guidance on AI in payment environments (Part 3 §3.1)."
@@ -202,17 +325,36 @@
         "PCI DSS: card-brand assessments and fines often USD 5,000 to USD 100,000+ per month for non-compliance (contractual; Part 3 §3.1).",
         "FTC Safeguards Rule / GLBA: civil penalties and enforcement orders (Part 1 §1.4).",
         "State breach-notification and privacy laws: per-record or per-consumer caps vary (Part 1 §1.3)."
+      ],
+      "regions": [
+        "universal"
       ]
     },
     {
       "id": "phi-health-hipaa",
-      "sectors": ["healthcare"],
+      "sectors": [
+        "healthcare"
+      ],
       "title": "PHI, HIPAA minimum necessary, clinical posture",
       "keywords": [
-        "phi", "hipaa", "patient", "diagnos", "medical", "health", "clinician", "treatment",
-        "medicare", "coverage", "therapy", "mental health"
+        "phi",
+        "hipaa",
+        "patient",
+        "diagnos",
+        "medical",
+        "health",
+        "clinician",
+        "treatment",
+        "medicare",
+        "coverage",
+        "therapy",
+        "mental health"
       ],
-      "document_sections": ["Part 1 §§1.4 HIPAA, CMS, ONC", "Part 3 §§3.2 HIPAA", "Part 2 §2.6"],
+      "document_sections": [
+        "Part 1 §§1.4 HIPAA, CMS, ONC",
+        "Part 3 §§3.2 HIPAA",
+        "Part 2 §2.6"
+      ],
       "regulatory_refs": [
         "HIPAA Privacy/Security Rules; BAA chain (Part 3 §3.2).",
         "CMS MA rule — individualized coverage decisions (Part 3 §3.2)."
@@ -229,18 +371,38 @@
         "HIPAA civil money penalties: roughly USD 137 to USD 2.07 million per violation tier (HHS; inflation-adjusted annually; Part 1 §1.4 / Part 3 §3.2).",
         "HIPAA criminal penalties: up to USD 250,000 and imprisonment for knowing misuse (Part 3 §3.2).",
         "State AG and private actions under My Health My Data and similar laws: actual damages plus statutory amounts (Part 1 §1.2)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "financial-fair-lending",
-      "sectors": ["financial"],
-      "evaluation_suites": ["functional"],
+      "sectors": [
+        "financial"
+      ],
+      "evaluation_suites": [
+        "functional"
+      ],
       "title": "Consumer finance, adverse action, fair lending",
       "keywords": [
-        "adverse action", "deny credit", "credit denial", "loan denial", "ecoa", "fcra",
-        "underwriting decision", "credit score", "lending", "fair lending", "fraud dispute credit"
+        "adverse action",
+        "deny credit",
+        "credit denial",
+        "loan denial",
+        "ecoa",
+        "fcra",
+        "underwriting decision",
+        "credit score",
+        "lending",
+        "fair lending",
+        "fraud dispute credit"
       ],
-      "document_sections": ["Part 1 §§1.4 ECOA/FCRA", "Part 3 §3.3", "Part 2 §2.3 CJEU credit cases"],
+      "document_sections": [
+        "Part 1 §§1.4 ECOA/FCRA",
+        "Part 3 §3.3",
+        "Part 2 §2.3 CJEU credit cases"
+      ],
       "regulatory_refs": [
         "ECOA Reg B; CFPB circulars on AI explainability (Part 1 §1.4; Part 3 §3.3).",
         "EU Consumer Credit Directive — human intervention (Part 1 §1.5)."
@@ -257,17 +419,34 @@
         "FCRA: statutory damages USD 100 to USD 1,000 per willful violation in private actions (Part 1 §1.4).",
         "UK FCA: unlimited fines and customer redress schemes for regulated firms (Part 1 §1.7).",
         "GDPR profiling / automated decisions: up to EUR 20 million or 4% of turnover (Part 1 §1.5)."
+      ],
+      "regions": [
+        "us",
+        "emea"
       ]
     },
     {
       "id": "employment-screening",
-      "evaluation_suites": ["functional"],
+      "evaluation_suites": [
+        "functional"
+      ],
       "title": "Employment and algorithmic hiring",
       "keywords": [
-        "hiring", "job applicant", "recruit", "candidate", "interview", "eeoc", "disability hire",
-        "screening applicant", "employment decision", "bias audit hiring"
+        "hiring",
+        "job applicant",
+        "recruit",
+        "candidate",
+        "interview",
+        "eeoc",
+        "disability hire",
+        "screening applicant",
+        "employment decision",
+        "bias audit hiring"
       ],
-      "document_sections": ["Part 1 §§1.1 NYC LL 144, 1.2 IL HB 3773", "Part 2 §2.5"],
+      "document_sections": [
+        "Part 1 §§1.1 NYC LL 144, 1.2 IL HB 3773",
+        "Part 2 §2.5"
+      ],
       "regulatory_refs": [
         "Title VII / ADA / ADEA; state AI employment laws (Part 1 §§1.2–1.4).",
         "NYC Local Law 144 bias audit (Part 1 §1.1)."
@@ -284,16 +463,44 @@
         "NYC Local Law 144: USD 500 first violation; USD 500 to USD 1,500 each later violation; each day may count (Part 1 §1.1).",
         "Illinois HB 3773: Human Rights Act civil penalties, back pay, and attorney's fees (Part 1 §1.2).",
         "Title VII / ADA federal remedies: compensatory and punitive damages with statutory caps by employer size (Part 1 §1.4)."
+      ],
+      "regions": [
+        "us",
+        "emea"
       ]
     },
     {
       "id": "telecom-tcpa-messaging",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "SMS, email, TCPA, AI voice, inbound messaging",
       "keywords": [
-        "tcpa", "robocall", "telemarket", "sms", "text", "email", "10dlc", "consent", "opt-out",
-        "stop", "revoke", "artificial voice", "prerecord", "can-spam", "pecr", "casl", "a2p",
-        "dmarc", "spf", "dkim", "sender id", "inbound message", "registry scrub", "dnc"
+        "tcpa",
+        "robocall",
+        "telemarket",
+        "sms",
+        "text",
+        "email",
+        "10dlc",
+        "consent",
+        "opt-out",
+        "stop",
+        "revoke",
+        "artificial voice",
+        "prerecord",
+        "can-spam",
+        "pecr",
+        "casl",
+        "a2p",
+        "dmarc",
+        "spf",
+        "dkim",
+        "sender id",
+        "inbound message",
+        "registry scrub",
+        "dnc"
       ],
       "document_sections": [
         "Part 1 §1.11 AI-sent and AI-received SMS and email",
@@ -321,15 +528,39 @@
         "CAN-SPAM: up to USD 53,088 per email (Part 1 §1.11.2).",
         "California CIPA: USD 5,000 per violation for interception/recording exposure (Part 1 §1.11.3).",
         "State mini-TCPA and autodial laws: often USD 500 to USD 1,500 per contact (Part 1 §1.2)."
+      ],
+      "regions": [
+        "us",
+        "north-america",
+        "latam",
+        "emea",
+        "apac"
       ]
     },
     {
       "id": "accessibility",
-      "evaluation_suites": ["functional", "corner-security", "empathy"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security",
+        "empathy"
+      ],
       "title": "Accessibility (WCAG, ADA, EAA)",
       "keywords": [
-        "accessib", "wcag", "screen reader", "keyboard", "ada", "captions", "deaf",
-        "blind", "disability", "aria", "relay", "rtt", "voice only", "timeout", "captcha"
+        "accessib",
+        "wcag",
+        "screen reader",
+        "keyboard",
+        "ada",
+        "captions",
+        "deaf",
+        "blind",
+        "disability",
+        "aria",
+        "relay",
+        "rtt",
+        "voice only",
+        "timeout",
+        "captcha"
       ],
       "document_sections": [
         "Part 3 §3.13 ADA and US accessibility regulations",
@@ -356,16 +587,33 @@
         "Private Title III suits: injunctions and attorney's fees (no statutory damages under Title III itself; Part 3 §3.13.1).",
         "Germany BFSG accessibility: fines up to EUR 100,000 (background; verify; Part 1 §1.6).",
         "European Accessibility Act: member-state penalties (Part 1 §1.5)."
+      ],
+      "regions": [
+        "us",
+        "emea",
+        "apac"
       ]
     },
     {
       "id": "data-protection-gdpr",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Data protection, automated decisions, DPIAs",
       "keywords": [
-        "gdpr", "lawful basis", "dpia", "article 22", "profiling", "transfer", "processor"
+        "gdpr",
+        "lawful basis",
+        "dpia",
+        "article 22",
+        "profiling",
+        "transfer",
+        "processor"
       ],
-      "document_sections": ["Part 1 §§1.5 GDPR, 1.7 UK GDPR", "Part 2 §2.3"],
+      "document_sections": [
+        "Part 1 §§1.5 GDPR, 1.7 UK GDPR",
+        "Part 2 §2.3"
+      ],
       "regulatory_refs": [
         "GDPR transparency, Art. 22 automated decisions, processor contracts (Part 1 §1.5).",
         "UK automated decision safeguards (Part 1 §1.7)."
@@ -380,16 +628,40 @@
       "possible_fines": [
         "EU GDPR: up to EUR 20 million or 4% of worldwide turnover; EUR 10 million or 2% for lesser infringements (Part 1 §1.5).",
         "UK GDPR / DPA 2018: up to GBP 17.5 million or 4%; GBP 8.7 million or 2% for lesser infringements (Part 1 §1.7)."
+      ],
+      "regions": [
+        "emea"
       ]
     },
     {
       "id": "security-llm-owasp",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Security, prompt injection, excessive agency (OWASP LLM / Agentic 2026)",
       "keywords": [
-        "prompt injection", "jailbreak", "system prompt", "hidden context", "tool", "exfiltrat", "pii leak",
-        "secret", "credential", "bypass", "guardrail", "excessive agency", "agentic", "goal hijack",
-        "supply chain", "poison", "vector", "embedding", "improper output", "rogue agent", "mcp"
+        "prompt injection",
+        "jailbreak",
+        "system prompt",
+        "hidden context",
+        "tool",
+        "exfiltrat",
+        "pii leak",
+        "secret",
+        "credential",
+        "bypass",
+        "guardrail",
+        "excessive agency",
+        "agentic",
+        "goal hijack",
+        "supply chain",
+        "poison",
+        "vector",
+        "embedding",
+        "improper output",
+        "rogue agent",
+        "mcp"
       ],
       "document_sections": [
         "Part 3 §3.12 OWASP AI and application security standards",
@@ -412,16 +684,36 @@
         "EU NIS2: at least EUR 10 million or 2% for essential entities (member states may go higher; Part 1 §1.5).",
         "UK NIS Regulations 2018: up to GBP 17 million (Part 1 §1.7).",
         "Breach and security failures may also trigger GDPR/HIPAA tiers above."
+      ],
+      "regions": [
+        "universal"
       ]
     },
     {
       "id": "financial-banking-safeguards",
-      "sectors": ["financial"],
-      "evaluation_suites": ["functional", "corner-security"],
+      "sectors": [
+        "financial"
+      ],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "GLBA, NYDFS, and banking security for AI channels",
       "keywords": [
-        "glba", "nydfs", "safeguards rule", "cfpb", "udaap", "reg e", "money transmit",
-        "wire transfer", "fraud alert", "aml", "bsa", "non-bank", "mfa", "vendor oversight"
+        "glba",
+        "nydfs",
+        "safeguards rule",
+        "cfpb",
+        "udaap",
+        "reg e",
+        "money transmit",
+        "wire transfer",
+        "fraud alert",
+        "aml",
+        "bsa",
+        "non-bank",
+        "mfa",
+        "vendor oversight"
       ],
       "document_sections": [
         "Part 3 §3.3 financial institution AI",
@@ -443,18 +735,36 @@
         "NYDFS Part 500: civil penalties per violation; recent consent orders include multi-million-dollar amounts (Part 3 §3.11.4).",
         "FTC Safeguards Rule: civil penalties where violations overlap FTC penalty statutes (Part 3 §3.11.2).",
         "GLBA / Regulation P privacy failures: regulatory orders and customer redress (Part 1 §1.4)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "insurance-naic",
-      "sectors": ["insurance", "healthcare"],
-      "evaluation_suites": ["functional"],
+      "sectors": [
+        "insurance",
+        "healthcare"
+      ],
+      "evaluation_suites": [
+        "functional"
+      ],
       "title": "Insurance AI governance",
       "keywords": [
-        "health insurance", "insurer", "insurance claim", "policyholder", "naic", "utilization review",
-        "medical necessity", "prior auth insurance", "medicare advantage"
+        "health insurance",
+        "insurer",
+        "insurance claim",
+        "policyholder",
+        "naic",
+        "utilization review",
+        "medical necessity",
+        "prior auth insurance",
+        "medicare advantage"
       ],
-      "document_sections": ["Part 1 §§1.2 state UR laws", "Part 3 §3.3 NAIC Model Bulletin"],
+      "document_sections": [
+        "Part 1 §§1.2 state UR laws",
+        "Part 3 §3.3 NAIC Model Bulletin"
+      ],
       "regulatory_refs": [
         "NAIC Model Bulletin on insurers' use of AI (Part 3 §3.3).",
         "State utilization-review physician rules (e.g. CA SB 1120) (Part 1 §1.2)."
@@ -470,16 +780,31 @@
         "State unfair trade practice and insurance department penalties (amounts vary by state; NAIC bulletins; Part 3 §3.3).",
         "Colorado AI Act (if enforcement resumes): up to USD 20,000 per violation per consumer (Part 1 §1.2).",
         "Algorithmic denial litigation: compensatory and punitive damages (Part 2 §2.6; not fixed fines)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "content-provenance",
-      "evaluation_suites": ["functional", "corner-security"],
+      "evaluation_suites": [
+        "functional",
+        "corner-security"
+      ],
       "title": "Synthetic media marking and provenance",
       "keywords": [
-        "deepfake", "synthetic", "watermark", "provenance", "c2pa", "generat image", "generat video"
+        "deepfake",
+        "synthetic",
+        "watermark",
+        "provenance",
+        "c2pa",
+        "generat image",
+        "generat video"
       ],
-      "document_sections": ["Part 1 §§1.5 AI Act marking, 1.2 CA SB 942", "Part 3 §3.7"],
+      "document_sections": [
+        "Part 1 §§1.5 AI Act marking, 1.2 CA SB 942",
+        "Part 3 §3.7"
+      ],
       "regulatory_refs": [
         "EU AI Act transparency for synthetic content (Part 1 §1.5).",
         "California AI Transparency Act (Part 1 §1.2; Part 3 §3.7)."
@@ -495,18 +820,43 @@
         "EU AI Act synthetic-content transparency: up to EUR 15 million or 3% of turnover (Part 1 §1.5).",
         "TAKE IT DOWN Act: penalties reported up to USD 53,088 per violation for platform duties (Part 1 §1.4).",
         "State election and NCII deepfake laws: criminal fines and civil damages (Part 1 §1.3)."
+      ],
+      "regions": [
+        "us",
+        "emea",
+        "apac"
       ]
     },
     {
       "id": "fedramp-cloud-authorization",
-      "sectors": ["government"],
+      "sectors": [
+        "government"
+      ],
       "title": "FedRAMP / GovRAMP cloud authorization and 20x (government only)",
       "keywords": [
-        "fedramp", "govramp", "ato", "authorization", "marketplace", "impact level",
-        "moderate", "high", "ksi", "significant change", "20x", "leveraged service",
-        "scim", "sso", "agency", "cfo act", "gsa schedule"
+        "fedramp",
+        "govramp",
+        "ato",
+        "authorization",
+        "marketplace",
+        "impact level",
+        "moderate",
+        "high",
+        "ksi",
+        "significant change",
+        "20x",
+        "leveraged service",
+        "scim",
+        "sso",
+        "agency",
+        "cfo act",
+        "gsa schedule"
       ],
-      "document_sections": ["Part 3 §3.10.1 FedRAMP and AI", "Part 3 §3.10.5 State and local (GovRAMP)", "Part 3 §3.10.7 Checklist"],
+      "document_sections": [
+        "Part 3 §3.10.1 FedRAMP and AI",
+        "Part 3 §3.10.5 State and local (GovRAMP)",
+        "Part 3 §3.10.7 Checklist"
+      ],
       "regulatory_refs": [
         "FedRAMP Rev5 baselines (NIST SP 800-53 Rev. 5); machine-readable packages (RFC-0024, January 2026).",
         "FedRAMP 20x — continuous KSI evidence; prioritized conversational AI authorization (GSA/FedRAMP AI Prioritization, August 2025).",
@@ -521,18 +871,38 @@
       "possible_fines": [
         "Loss of ATO and contract termination; False Claims Act treble damages for misrepresented authorization (Part 3 §3.10).",
         "Agency-specific CSP oversight: suspension from federal marketplaces (programmatic, not per-violation consumer fines)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "federal-omb-ai-policy",
-      "sectors": ["government"],
+      "sectors": [
+        "government"
+      ],
       "title": "Federal OMB / EO AI policy for agency virtual agents (government only)",
       "keywords": [
-        "omb", "m-25-21", "m-25-22", "m-26-04", "high-impact", "impact assessment",
-        "chief ai", "unbiased ai", "model card", "system card", "acceptable use",
-        "federal records", "privacy impact", "pia", "sorn"
+        "omb",
+        "m-25-21",
+        "m-25-22",
+        "m-26-04",
+        "high-impact",
+        "impact assessment",
+        "chief ai",
+        "unbiased ai",
+        "model card",
+        "system card",
+        "acceptable use",
+        "federal records",
+        "privacy impact",
+        "pia",
+        "sorn"
       ],
-      "document_sections": ["Part 3 §3.10.2 Federal AI policy", "Part 1 §1.4 OMB memoranda"],
+      "document_sections": [
+        "Part 3 §3.10.2 Federal AI policy",
+        "Part 1 §1.4 OMB memoranda"
+      ],
       "regulatory_refs": [
         "OMB M-25-21 — testing, impact assessment, monitoring, human oversight for high-impact federal AI.",
         "OMB M-25-22 — acquisition terms: monitoring, data rights, privacy, lock-in avoidance.",
@@ -547,17 +917,33 @@
       "possible_fines": [
         "Federal acquisition remedies: contract termination for default, suspension/debarment, and payment withholds (OMB M-25-21/22; Part 3 §3.10).",
         "Privacy Act / PIA deficiencies: agency corrective action and OIG referrals (case-specific)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "gov-sensitive-data-cjis-irs",
-      "sectors": ["government"],
+      "sectors": [
+        "government"
+      ],
       "title": "CJIS and federal tax information in government agents (government only)",
       "keywords": [
-        "cjis", "criminal justice", "fbi", "irs", "1075", "federal tax", "fti",
-        "safeguard", "taxpayer", "law enforcement"
+        "cjis",
+        "criminal justice",
+        "fbi",
+        "irs",
+        "1075",
+        "federal tax",
+        "fti",
+        "safeguard",
+        "taxpayer",
+        "law enforcement"
       ],
-      "document_sections": ["Part 3 §3.10.4 Criminal justice and tax data", "Part 3 §3.11 IRS Publication 1075 and federal/state regulated data"],
+      "document_sections": [
+        "Part 3 §3.10.4 Criminal justice and tax data",
+        "Part 3 §3.11 IRS Publication 1075 and federal/state regulated data"
+      ],
       "regulatory_refs": [
         "FBI CJIS Security Policy v6.1 (June 2026) — no AI exemption for CJIS-touched systems.",
         "IRS Publication 1075 — federal tax information in prompts, transcripts, logs, and retrieval."
@@ -571,17 +957,33 @@
       "possible_fines": [
         "CJIS Security Policy: loss of access, contract termination, and potential criminal liability for unauthorized disclosure (Part 3 §3.10).",
         "IRS Publication 1075: fines and imprisonment for unauthorized disclosure of federal tax information (26 USC; Part 3 §3.10)."
+      ],
+      "regions": [
+        "us"
       ]
     },
     {
       "id": "defense-ila-cmmc",
-      "sectors": ["government"],
+      "sectors": [
+        "government"
+      ],
       "title": "DoD impact levels and contractor CMMC (government / defense only)",
       "keywords": [
-        "dod", "disa", "il4", "il5", "il6", "cmmc", "cui", "dfars", "genai.mil",
-        "controlled unclassified", "defense"
+        "dod",
+        "disa",
+        "il4",
+        "il5",
+        "il6",
+        "cmmc",
+        "cui",
+        "dfars",
+        "genai.mil",
+        "controlled unclassified",
+        "defense"
       ],
-      "document_sections": ["Part 3 §3.10.3 Defense"],
+      "document_sections": [
+        "Part 3 §3.10.3 Defense"
+      ],
       "regulatory_refs": [
         "DISA Cloud SRG impact levels for CUI and classified workloads.",
         "CMMC / DFARS 252.204-7012 — FedRAMP Moderate equivalence for CUI in cloud.",
@@ -595,7 +997,36 @@
       "possible_fines": [
         "DFARS / CMMC: loss of DoD contracts, false-certification liability under False Claims Act (treble damages; Part 3 §3.10).",
         "DISA authorization gaps: prohibition on processing CUI in non-authorized cloud environments."
+      ],
+      "regions": [
+        "us"
       ]
     }
-  ]
+  ],
+  "region_profiles": {
+    "us": {
+      "label": "United States",
+      "description": "US law and cases only."
+    },
+    "north-america": {
+      "label": "North America",
+      "description": "US, Canada, Mexico."
+    },
+    "latam": {
+      "label": "LATAM & Caribbean",
+      "description": "Latin American jurisdictions."
+    },
+    "emea": {
+      "label": "EMEA",
+      "description": "EU, UK, Middle East, Africa themes."
+    },
+    "apac": {
+      "label": "APAC",
+      "description": "Asia-Pacific themes."
+    },
+    "all": {
+      "label": "All regions",
+      "description": "Worldwide compendium mapping (default)."
+    }
+  }
 }
